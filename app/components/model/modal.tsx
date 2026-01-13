@@ -12,7 +12,7 @@ import { RootState } from "../../redux/store";
 const ModalComponent = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { loading, verificationLoading } = useAppSelector((state: RootState) => state.auth);
+  const { loading } = useAppSelector((state: RootState) => state.auth);
   const { cartItems } = useAppSelector((state: RootState) => state.cart);
 
   const [step, setStep] = useState("phone");
@@ -242,7 +242,7 @@ const ModalComponent = () => {
             <div className="flex flex-col gap-2 xs:gap-3 sm:gap-[0.9879rem] mt-2">
               <LoadingButton
                 onClick={handleConfirm}
-                loading={verificationLoading}
+                loading={loading}
                 disabled={otp.join("").length !== 4}
                 text="Confirm"
               />

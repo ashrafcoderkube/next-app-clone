@@ -150,7 +150,6 @@ const MiniCart = ({ items = [], onClose }: MiniCartProps) => {
 
   return cartContent;
 };
-console.log("MiniCart");
 
 export default MiniCart;
 

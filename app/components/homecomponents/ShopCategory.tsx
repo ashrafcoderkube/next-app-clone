@@ -1,19 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CategorySlider from "../customcomponents/CategorySlider";
 import ButtonLink, { ButtonLink2 } from "../customcomponents/ButtonLink";
 import OutlineButton from "../customcomponents/OutlineButton";
 import CustomCategoryCard from "../customcomponents/CustomCategoryCard";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   selectThemeData,
   selectProductCategories,
   selectThemeColors,
 } from "../../redux/selectors";
 import SafeImage from "../SafeImage";
+import { fetchProductCategories } from "@/app/redux/slices/productSlice";
 
 // Extract style objects to prevent recreation
 const sharedLayoutStyle = {
@@ -115,7 +116,9 @@ const ShopCategory = React.memo(function ShopCategory() {
   const router = useRouter();
   const { themeId } = useAppSelector(selectThemeData);
   const themeColors = useAppSelector(selectThemeColors);
-  const categories = useAppSelector(selectProductCategories);
+  const { categories } = useAppSelector(selectProductCategories);
+
+  console.log("categories", categories);
 
   // Memoize the view all categories handler
   const handleViewAllCategories = React.useCallback(() => {

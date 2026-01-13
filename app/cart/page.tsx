@@ -14,6 +14,7 @@ import { NoImage } from '../components/SafeImage';
 import ContinueShoppingLink from '../components/ContinueShoppingLink';
 import CustomCategoryCard from '../components/customcomponents/CustomCategoryCard';
 import CartSimilar from '../components/CartSimilar';
+import { selectProductCategories, selectThemeData } from '../redux/selectors';
 
 function Cart() {
   const router = useRouter();
@@ -21,16 +22,8 @@ function Cart() {
   const themeContext = useTheme() || {};
   const { bottomFooterTextColor } = themeContext;
   const { cartItems } = useAppSelector((state: RootState) => state.cart);
-  const themeId = useAppSelector(
-    (state: RootState) => state.storeInfo?.themeId
-  );
-  const productCategories = useAppSelector(
-    (state: RootState) => state.products.productCategories
-  );
-
-  const categories = useMemo(() => {
-    return productCategories?.sub_categories || [];
-  }, [productCategories?.sub_categories]);
+  const { themeId } = useAppSelector((selectThemeData))
+  const { categories } = useAppSelector(selectProductCategories);
 
   useEffect(() => {
     dispatch(fetchCart());

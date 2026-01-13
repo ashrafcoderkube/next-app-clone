@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setStoreInfo } from "../redux/slices/storeInfoSlice";
 import { selectStoreInfo } from "../redux/selectors";
@@ -10,8 +10,8 @@ import axiosInstance from "../utils/axiosInstance";
 
 export default function StoreInfoInitializer() {
   const dispatch = useAppDispatch();
-  const { storeInfo } = useAppSelector(selectStoreInfo);
   const gaInitializedRef = useRef(false);
+  const { storeInfo } = useAppSelector(selectStoreInfo);
 
   // Fetch store info from API on client side
   useEffect(() => {

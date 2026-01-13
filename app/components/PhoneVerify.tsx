@@ -11,7 +11,7 @@ import { RootState } from "../redux/store";
 
 export const PhoneVerify = () => {
   const dispatch = useAppDispatch();
-  const { loading, verificationLoading } = useAppSelector((state: RootState) => state.auth);
+  const { loading } = useAppSelector((state: RootState) => state.auth);
   const { cartItems } = useAppSelector((state: RootState) => state.cart);
   const themeContext = useTheme() || {};
 
@@ -81,12 +81,12 @@ export const PhoneVerify = () => {
 
         if (res?.success) {
           setShowForm(false);
-          // if (res?.data?.is_existing_customer) {
-          const token = res?.data?.token;
-          if (token && cartItems.length > 0) {
-            dispatch(syncGuestCartItems({ token, cartItems }));
+          if (res?.data?.is_existing_customer) {
+            const token = res?.data?.token;
+            if (token && typeof token === 'string' && token.trim() && cartItems.length > 0) {
+              dispatch(syncGuestCartItems({ token, cartItems }));
+            }
           }
-          // }
           modalClose();
         }
       } catch (error) {
@@ -174,11 +174,10 @@ export const PhoneVerify = () => {
                 ? "Please enter a valid phone number"
                 : ""
             }
-            inputClassName={`form-control ${
-              phoneNumber && showForm ? "bg-gray-100" : ""
-            }`}
+            inputClassName={`form-control ${phoneNumber && showForm ? "bg-gray-100" : ""
+              }`}
             aria-describedby="phone-error"
-            // size="lg"
+          // size="lg"
           />
           {showForm && (
             <div className="flex justify-end mt-1">
@@ -231,11 +230,10 @@ export const PhoneVerify = () => {
                 <button
                   onClick={handleResend}
                   disabled={timer > 0}
-                  className={`w-auto whitespace-nowrap xs:w-auto underline text-xs xs:text-sm sm:text-sm ${
-                    timer > 0
+                  className={`w-auto whitespace-nowrap xs:w-auto underline text-xs xs:text-sm sm:text-sm ${timer > 0
                       ? "cursor-not-allowed opacity-50 text-gray-500"
                       : "cursor-pointer hover:opacity-100 text-gray-900"
-                  }`}
+                    }`}
                 >
                   <span className="block w-full text-left link-class">
                     {timer > 0 ? `Resend in ${timer}s` : "Resend Code"}
@@ -252,7 +250,7 @@ export const PhoneVerify = () => {
             <div className="flex flex-col gap-2 xs:gap-3 sm:gap-[0.9879rem] mt-2">
               <LoadingButton
                 onClick={handleConfirm}
-                loading={verificationLoading}
+                loading={loading}
                 disabled={otp.join("").length !== 4}
                 text="Confirm"
                 fullWidth={true}

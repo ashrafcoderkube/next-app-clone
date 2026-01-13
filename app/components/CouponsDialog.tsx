@@ -1,4 +1,4 @@
-"use client";
+
 
 import {
   Dialog,
@@ -10,7 +10,6 @@ import {
   X,
   Tag,
   Info,
-  DollarSign,
   CreditCard,
   ShoppingBag,
   AlertCircle,

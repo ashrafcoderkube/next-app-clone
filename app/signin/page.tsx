@@ -13,7 +13,7 @@ import { syncGuestCartItems } from "../redux/slices/cartSlice";
 function SignIn() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { loading, verificationLoading } = useAppSelector(
+  const { loading } = useAppSelector(
     (state: RootState) => state.auth
   );
   const { cartItems } = useAppSelector((state: RootState) => state.cart);
@@ -236,7 +236,7 @@ function SignIn() {
                   <div className="flex flex-col gap-2 xs:gap-3 sm:gap-[0.9879rem] mt-2">
                     <LoadingButton
                       onClick={handleConfirm}
-                      loading={verificationLoading}
+                      loading={loading}
                       disabled={otp.join("").length !== 4}
                       text="Confirm"
                       backgroundColor={themeContext?.buttonBackgroundColor}

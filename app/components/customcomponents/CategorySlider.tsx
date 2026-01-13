@@ -1,48 +1,37 @@
-"use client";
+'use client';
 
 import React, {
   useEffect,
   useMemo,
-  useRef,
   useCallback,
   useState,
 } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
-import Loader from "./Loader";
 import CustomCategoryCard from "./CustomCategoryCard";
 import { fetchProductCategories } from "@/app/redux/slices/productSlice";
 import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { selectProductCategories } from "@/app/redux/selectors";
 
 export default function CategorySlider() {
   const themeContext = useTheme() || {};
   const dispatch = useAppDispatch();
   const { textColor } = themeContext;
   const isSwiper = (themeContext?.categoryLayout || "swiper") === "swiper";
-
-  const { productCategories, loading } = useAppSelector(
-    (state: RootState) => state.products
-  );
+  const { categories, loading } = useAppSelector(selectProductCategories);
 
   useEffect(() => {
-    if (!productCategories) {
+    if (categories.length === 0) {
       dispatch(fetchProductCategories());
     }
-  }, [dispatch]);
-
-  // Use subcategory list directly (already matches CategoryItem interface)
-  const categories = useMemo(
-    () => productCategories?.sub_categories || [],
-    [productCategories?.sub_categories]
-  );
+  }, [dispatch, categories.length]);
 
   // Embla Carousel setup
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
-      align: "start",
+      align: 'start',
       slidesToScroll: 1, // Always scroll one slide at a time for smooth movement
     }
     // [Autoplay({ delay: 2000, stopOnInteraction: true })]
@@ -62,8 +51,8 @@ export default function CategorySlider() {
   useEffect(() => {
     if (emblaApi) {
       updateScrollState();
-      emblaApi.on("select", updateScrollState);
-      emblaApi.on("reInit", updateScrollState);
+      emblaApi.on('select', updateScrollState);
+      emblaApi.on('reInit', updateScrollState);
     }
   }, [emblaApi, updateScrollState]);
 
@@ -81,16 +70,24 @@ export default function CategorySlider() {
   const isNextDisabled = hasNoSlides || !canScrollNext;
 
   if (loading) {
-    const skeletonItems = Array.from({ length: 8 }, (_, idx) => ({ sub_category_id: idx, sub_category_name: '', sub_category_image: '' }));
+    const skeletonItems = Array.from({ length: 8 }, (_, idx) => ({
+      sub_category_id: idx,
+      sub_category_name: '',
+      sub_category_image: '',
+    }));
 
     return (
-      <div className="px-container">
+      <div className='px-container'>
         {isSwiper ? (
-          <div className="newsSlider-wrapper">
-            <div className="relative">
-              <div className="flex gap-6 overflow-hidden">
+          <div className='newsSlider-wrapper'>
+            <div className='relative'>
+              <div className='flex gap-6 overflow-hidden'>
                 {skeletonItems.slice(0, 4).map((item, idx) => (
-                  <div key={idx} className="flex-shrink-0" style={{ width: '280px' }}>
+                  <div
+                    key={idx}
+                    className='flex-shrink-0'
+                    style={{ width: '280px' }}
+                  >
                     <CustomCategoryCard
                       isLoading={true}
                       isSwiper={isSwiper}
@@ -103,8 +100,8 @@ export default function CategorySlider() {
             </div>
           </div>
         ) : (
-          <section className="py-padding-100">
-            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-4">
+          <section className='py-padding-100'>
+            <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-4'>
               {skeletonItems.map((item, idx) => (
                 <CustomCategoryCard
                   key={idx}
@@ -122,34 +119,37 @@ export default function CategorySlider() {
 
   return (
     <>
-      <div className="px-container">
+      <div className='px-container'>
         {isSwiper ? (
           <div
-            className="newsSlider-wrapper"
+            className='newsSlider-wrapper'
             style={
               {
-                "--button-color":
-                  themeContext?.buttonBackgroundColor || "#111111",
+                '--button-color':
+                  themeContext?.buttonBackgroundColor || '#111111',
               } as React.CSSProperties
             }
           >
             {categories.length > 0 ? (
               <>
                 <div
-                  className="relative"
+                  className='relative'
                   style={
                     {
-                      "--button-color":
-                        themeContext?.buttonBackgroundColor || "#111111",
+                      '--button-color':
+                        themeContext?.buttonBackgroundColor || '#111111',
                     } as React.CSSProperties
                   }
                 >
-                  <div className="embla overflow-hidden" ref={emblaRef}>
-                    <div className="embla__container flex justify-center align-center">
+                  <div
+                    className='embla overflow-hidden'
+                    ref={emblaRef}
+                  >
+                    <div className='embla__container flex justify-center align-center'>
                       {categories.map((item, idx) => (
                         <div
                           key={item.sub_category_id || idx}
-                          className="embla__slide w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 min-w-0"
+                          className='embla__slide w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 min-w-0'
                         >
                           <CustomCategoryCard
                             isSwiper={isSwiper}
@@ -162,42 +162,40 @@ export default function CategorySlider() {
                   </div>
 
                   {/* Navigation arrows - always visible */}
-                  <div>
+                  <div className='hidden md:block animation-section'>
                     <button
-                      className={`swiper-button-prev-custom swiper-button-prev swiper-button-prev1 ${
-                        isPrevDisabled ? "swiper-button-disabled" : ""
-                      }`}
+                      className={`swiper-button-prev-custom swiper-button-prev swiper-button-prev1 ${isPrevDisabled ? "swiper-button-disabled" : ""
+                        }`}
                       onClick={scrollPrev}
                       disabled={isPrevDisabled}
                       style={{
                         backgroundColor:
-                          themeContext?.buttonBackgroundColor || "#111111",
-                        color: themeContext?.buttonTextColor || "#ffffff",
+                          themeContext?.buttonBackgroundColor || '#111111',
+                        color: themeContext?.buttonTextColor || '#ffffff',
                       }}
                     >
-                      <ChevronLeft className="w-6 h-6" />
+                      <ChevronLeft className='w-6 h-6' />
                     </button>
                     <button
-                      className={`swiper-button-next-custom swiper-button-next swiper-button-next1 ${
-                        isNextDisabled ? "swiper-button-disabled" : ""
-                      }`}
+                      className={`swiper-button-next-custom swiper-button-next swiper-button-next1 ${isNextDisabled ? "swiper-button-disabled" : ""
+                        }`}
                       onClick={scrollNext}
                       disabled={isNextDisabled}
                       style={{
                         backgroundColor:
-                          themeContext?.buttonBackgroundColor || "#111111",
-                        color: themeContext?.buttonTextColor || "#ffffff",
+                          themeContext?.buttonBackgroundColor || '#111111',
+                        color: themeContext?.buttonTextColor || '#ffffff',
                       }}
                     >
-                      <ChevronRight className="w-6 h-6" />
+                      <ChevronRight className='w-6 h-6' />
                     </button>
                   </div>
                 </div>
               </>
             ) : (
-              <div className="flex items-center justify-center p-4">
+              <div className='flex items-center justify-center p-4'>
                 <p
-                  className="text-sm"
+                  className='text-sm'
                   style={{
                     color: textColor,
                   }}
@@ -208,9 +206,9 @@ export default function CategorySlider() {
             )}
           </div>
         ) : (
-          <section className="py-padding-100">
+          <section className='py-padding-100'>
             {categories.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-4">
+              <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-4'>
                 {categories.map((item, idx) => (
                   <CustomCategoryCard
                     key={item.sub_category_id || idx}
@@ -220,9 +218,9 @@ export default function CategorySlider() {
                 ))}
               </div>
             ) : (
-              <div className="flex items-center justify-center p-4">
+              <div className='flex items-center justify-center p-4'>
                 <p
-                  className="text-sm"
+                  className='text-sm'
                   style={{
                     color: textColor,
                   }}

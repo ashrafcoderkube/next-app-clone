@@ -117,8 +117,8 @@ export function ThemeProvider({ children, theme = {} }) {
 
   useEffect(() => {
     if ((storeInfo as any)?.theme_id) {
-      dispatch(setThemeId((storeInfo as any).theme_id));
-      // dispatch(setThemeId(1));
+      // dispatch(setThemeId((storeInfo as any).theme_id));
+      dispatch(setThemeId(1));
     }
   }, [storeInfo, dispatch]);
 

@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev:ws": "next dev -p 3001",
-    "dev:rt": "next dev -p 3000",
+    "dev:rt": "next dev --webpack -p 3000",
     "build": "next build",
+    "deploy": "opennext build && wrangler deploy",
     "start": "next start",
     "lint": "eslint",
     "clean": "rimraf dist && rimraf node_modules && rimraf .next",

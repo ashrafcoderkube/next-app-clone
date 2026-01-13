@@ -60,7 +60,6 @@ import SafeImage from "../SafeImage";
       (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("button clicked");
   
         if (!selectedVariant) {
           return; // Don't proceed if no variant selected

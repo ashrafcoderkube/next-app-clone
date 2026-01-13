@@ -8,44 +8,47 @@ import { selectHomeSectionData } from '../../redux/selectors';
 import Slider from '../customcomponents/Slider';
 import SafeImage from '../SafeImage';
 import HtmlContent from '../HtmlContent';
-import BannerSkeleton from '../customcomponents/BannerSkeleton';
-import { getFromSessionStorage, setToSessionStorage } from '../../utils/sessionStorage';
+import {
+  getFromSessionStorage,
+  setToSessionStorage,
+} from '../../utils/sessionStorage';
 
-const SingleImage = React.memo(function SingleImage({ data }: { data: any }) {
-  // Support both API structure (image) and component structure (image_url)
+/* ------------------ HERO IMAGE ------------------ */
+const SingleImage = React.memo(({ data }: { data: any }) => {
   const imageUrl = data?.image_url || data?.image;
+  if (!imageUrl) return null;
 
   return (
-    <div className='hero-overlay relative'>
-      {imageUrl && (
-        <div className="relative before:content-[''] before:block before:float-left before:pt-[100%] md:before:pt-[45%] after:content-[''] after:table after:clear-both bg-[#f2f2f2] h-full w-full">
-          <SafeImage
-            src={imageUrl}
-            alt={data?.title || 'Hero Image'}
-            className='absolute top-0 left-0 object-cover transition-all duration-500'
-            width={1920}
-            height={1080}
-            style={{ aspectRatio: '16/9', objectFit: 'cover', height: '100%' }}
-          />
-        </div>
-      )}
-      <div className='content-wrapper'>
+    <section className='relative w-full overflow-hidden'>
+      {/* FIXED HEIGHT → NO CLS */}
+      <div className='relative w-full aspect-[16/9] md:aspect-[21/9] bg-[#f2f2f2]'>
+        <SafeImage
+          src={imageUrl}
+          alt={data?.title || 'Hero Banner'}
+          fill
+          priority
+          // fetchPriority='high'
+          sizes='(max-width: 768px) 100vw, 1920px'
+          className='object-cover'
+        />
+      </div>
+
+      {/* CONTENT */}
+      <div className='content-wrapper absolute inset-0 flex items-center'>
         <div>
           {data?.title && (
-            <p className='text-[1.625rem] lg:text-[52px] uppercase text-white mb-[8px] font-bold line-clamp-2'>
-              {data?.title || 'Wardrobe Refresh'}
-            </p>
+            <h1 className='text-[26px] md:text-[52px] uppercase text-white font-bold mb-2 px-6'>
+              {data.title}
+            </h1>
           )}
+
           {data?.content && (
-            <div
-              className='text-[1.625rem] lg:text-[52px] uppercase text-white mb-[8px] font-bold line-clamp-2 px-6'
-              title={data?.content?.replace(/<[^>]*>?/gm, '') || ''}
-            >
-              <HtmlContent htmlContent={data?.content} />
+            <div className='uppercase text-white text-base md:text-[22px] mb-4 px-6'>
+              <HtmlContent htmlContent={data.content} />
             </div>
           )}
 
-          <div>
+          <div className='px-6'>
             <ButtonLink
               to='/shop'
               buttonType='banner'
@@ -55,112 +58,91 @@ const SingleImage = React.memo(function SingleImage({ data }: { data: any }) {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 });
+SingleImage.displayName = 'SingleImage';
 
-const Video = React.memo(function Video({ data }: { data: any }) {
-  // Support both API structure (video) and component structure (video_url)
+/* ------------------ HERO VIDEO ------------------ */
+const Video = React.memo(({ data }: { data: any }) => {
   const videoUrl = data?.video_url || data?.video;
+  if (!videoUrl) return null;
 
   return (
-    <div className='hero-overlay relative'>
-      {videoUrl && (
-        <div className='w-full h-full'>
-          <video
-            src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${videoUrl}`}
-            className="w-full h-full object-cover"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-        </div>
-      )}
-      <div className='content-wrapper'>
-        <div>
-          <p className='text-[1.625rem] lg:text-[52px] uppercase text-white sm:mb-[8px] mb-4 font-bold line-clamp-2 px-6'>
-            {data?.title || 'Wardrobe Refresh'}
-          </p>
-          <div
-            className='uppercase text-white sm:mb-[8px] mb-4 text-base sm:text-[1.625rem] lg:text-[22px]'
-            title={data?.content?.replace(/<[^>]*>?/gm, '') || ''}
-          >
-            <HtmlContent htmlContent={data?.content} />
-          </div>
-          <div>
-            <ButtonLink
-              to='/shop'
-              buttonType='banner'
-            >
-              View Collection
-            </ButtonLink>
-          </div>
-        </div>
-      </div>
-    </div>
+    <section className='relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden'>
+      <video
+        className='w-full h-full object-cover'
+        muted
+        playsInline
+        preload='none'
+        poster='/banner-poster.webp'
+      >
+        <source
+          src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${videoUrl}`}
+          type='video/mp4'
+        />
+      </video>
+    </section>
   );
 });
+Video.displayName = 'Video';
 
-const Banner = React.memo(function Banner() {
+/* ------------------ MAIN BANNER ------------------ */
+const Banner = React.memo(() => {
   const dispatch = useAppDispatch();
   const { homeSection, loading } = useAppSelector(selectHomeSectionData);
 
-  // Fetch home section data on component mount with session storage caching
   useEffect(() => {
     const cacheKey = 'home_section_data';
     const cachedData = getFromSessionStorage(cacheKey);
-    
+
     if (cachedData) {
-      // If cached data exists, manually update the Redux state
-      // We need to dispatch a custom action since we can't directly call fulfilled
-      dispatch({ type: 'homeSection/fetchHomeSection/fulfilled', payload: cachedData });
+      dispatch({
+        type: 'homeSection/fetchHomeSection/fulfilled',
+        payload: cachedData,
+      });
     } else {
-      // If no cached data, make the API call
-      dispatch(fetchHomeSection())
-        .unwrap()
-        .then((result) => {
-          if (result) {
-            // Cache the successful response (the full response object)
-            setToSessionStorage(cacheKey, result);
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching home section:', error);
-        });
+      requestIdleCallback(() => {
+        dispatch(fetchHomeSection())
+          .unwrap()
+          .then((result) => {
+            if (result) {
+              setToSessionStorage(cacheKey, result);
+            }
+          })
+          .catch(console.error);
+      });
     }
   }, [dispatch]);
 
-  // Get hero section from Redux state
-  const heroSection = homeSection?.hero;
+  const hero = homeSection?.hero;
 
-  // Show loading state
+  /* PLACEHOLDER → NO CLS */
   if (loading) {
-    return <BannerSkeleton />;
+    return (
+      <div className='w-full aspect-[16/9] md:aspect-[21/9] bg-[#f2f2f2]' />
+    );
   }
 
-  // If no hero section data, show placeholder
-  if (!heroSection) {
-    return <SingleImage data={null} />;
+  if (!hero) return null;
+
+  /* MOBILE VIDEO FALLBACK */
+  if (hero.hero_type === 'video' && typeof window !== 'undefined') {
+    if (window.innerWidth < 768) {
+      return <SingleImage data={hero} />;
+    }
+    return <Video data={hero} />;
   }
 
-  // Handle slider type - use first image from slider_files
-  if (heroSection?.hero_type === 'slider') {
-    return <Slider data={heroSection} />;
+  if (hero.hero_type === 'slider') {
+    return <Slider data={hero} />;
   }
 
-  // Handle image type
-  if (heroSection?.hero_type === 'image') {
-    return <SingleImage data={heroSection} />;
+  if (hero.hero_type === 'image') {
+    return <SingleImage data={hero} />;
   }
 
-  // Handle video type
-  if (heroSection?.hero_type === 'video') {
-    return <Video data={heroSection} />;
-  }
-
-  // Default fallback
-  return <SingleImage data={heroSection} />;
+  return <SingleImage data={hero} />;
 });
 
 Banner.displayName = 'Banner';

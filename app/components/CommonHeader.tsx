@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Icon from "./customcomponents/Icon";
 import { useAppSelector } from "../redux/hooks";
-import { RootState } from "../redux/store";
 import { useTheme } from "../contexts/ThemeContext";
+import { selectProductCategories, selectThemeData } from "../redux/selectors";
 
 interface CommonHeaderProps {
   className?: string;
@@ -20,10 +20,8 @@ export default function CommonHeader({
   const pathname = usePathname();
   const themeContext = useTheme() || {};
   const { bottomFooterTextColor } = themeContext;
-  const { themeId } = useAppSelector((state: RootState) => state.storeInfo);
-  const { productDetails, productCategories } = useAppSelector(
-    (state: RootState) => state.products
-  );
+  const { themeId } = useAppSelector((selectThemeData));
+  const { productDetails, categories } = useAppSelector((selectProductCategories));
 
   // Extract slug from pathname for product pages (e.g., /product/[slug])
   const productMatch = pathname.match(/^\/product\/([^/]+)$/);
@@ -114,8 +112,8 @@ export default function CommonHeader({
   };
 
   // Ensure sub_category_list is an array before using .find()
-  const subCategoryList = Array.isArray(productCategories?.sub_categories)
-    ? productCategories?.sub_categories
+  const subCategoryList = Array.isArray(categories)
+    ? categories
     : [];
 
   const subCategory = subCategoryList.find(
@@ -223,7 +221,7 @@ export default function CommonHeader({
 
   const innerContent = config.content || (
     <div
-   className={`px-container  word-break border-b border-gray-200/10 !py-4 ${themeId === 6 ? "py-10" : ""
+      className={`px-container  word-break border-b border-gray-200/10 !py-4 ${themeId === 6 ? "py-10" : ""
         } ${themeId === 4 || themeId === 5 ? "" : "common-banner"}`}
     >
       {showBreadcrumb && (

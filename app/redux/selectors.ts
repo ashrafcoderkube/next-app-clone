@@ -18,7 +18,11 @@ export const selectProductsState = (state: RootState) => state.products;
 
 export const selectProductCategories = createSelector(
   [selectProductsState],
-  (products) => products.productCategories?.sub_categories || []
+  (products) => ({
+    categories: products.productCategories?.sub_categories || [],
+    loading: products.loading,
+    productDetails: products.productDetails
+  })
 );
 
 export const selectFeaturedProducts = createSelector(
@@ -98,5 +102,14 @@ export const selectContactData = createSelector(
     loading: contact.loading,
     error: contact.error,
     success: contact.success,
+  })
+);
+
+// Track Order Selectors
+export const selectTrackOrder = createSelector(
+  [(state: RootState) => state.trackOrder],
+  (trackOrder) => ({
+    openOrderDetail: trackOrder.openOrderDetail,
+    order: trackOrder.order,
   })
 );

@@ -22,11 +22,8 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
-  verificationLoading: boolean;
   sent: boolean;
   loginSent: boolean;
-  verified: boolean;
-  verificationError: string | null;
 }
 
 interface RegisterData {
@@ -56,11 +53,8 @@ const initialState: AuthState = {
   loading: false,
   error: null,
   isAuthenticated: false,
-  verificationLoading: false,
   sent: false,
   loginSent: false,
-  verified: false,
-  verificationError: null,
 };
 
 export const registerUser = createAsyncThunk(
@@ -332,11 +326,8 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
       state.isAuthenticated = false;
-      state.verificationLoading = false;
       state.sent = false;
       state.loginSent = false;
-      state.verified = false;
-      state.verificationError = null;
     },
     updateCustomer: (state, action) => {
       const payload = action.payload;
@@ -382,20 +373,15 @@ const authSlice = createSlice({
       })
 
       .addCase(verifyRegisterOTP.pending, (state) => {
-        state.verificationLoading = true;
-        state.verificationError = null;
+        state.isAuthenticated = false;
       })
       .addCase(verifyRegisterOTP.fulfilled, (state, action) => {
-        state.verificationLoading = false;
-        state.verified = true;
         state.isAuthenticated = true;
         state.user = action.payload.data;
       })
       .addCase(verifyRegisterOTP.rejected, (state, action) => {
-        state.verificationLoading = false;
-        state.verificationError =
-          (action.payload as string) || "OTP verification failed";
-        state.verified = false;
+        state.isAuthenticated = false;
+        state.user = null;
       })
 
       .addCase(registerGuestUser.pending, (state) => {
@@ -426,7 +412,6 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.data;
-        state.verified = true;
         state.isAuthenticated = action.payload.success ? true : false;
         if (state.user?.customer && !state.user.customer.alt_phone_number) {
           state.user.customer.alt_phone_number =
@@ -446,7 +431,6 @@ const authSlice = createSlice({
       .addCase(sendOTP.fulfilled, (state) => {
         state.loading = false;
         state.sent = true;
-        state.verified = false;
       })
       .addCase(sendOTP.rejected, (state, action) => {
         state.loading = false;
@@ -460,7 +444,6 @@ const authSlice = createSlice({
       .addCase(sendLoginOTP.fulfilled, (state) => {
         state.loading = false;
         state.loginSent = true;
-        state.verified = false;
       })
       .addCase(sendLoginOTP.rejected, (state, action) => {
         state.loading = false;
@@ -469,12 +452,9 @@ const authSlice = createSlice({
       })
 
       .addCase(verifyOTP.pending, (state) => {
-        state.verificationLoading = true;
-        state.verificationError = null;
+        state.isAuthenticated = false;
       })
       .addCase(verifyOTP.fulfilled, (state, action) => {
-        state.verificationLoading = false;
-        state.verified = true;
         state.isAuthenticated = true;
         state.user = action.payload.data;
         if (state.user?.customer && !state.user.customer.alt_phone_number) {
@@ -483,18 +463,13 @@ const authSlice = createSlice({
         }
       })
       .addCase(verifyOTP.rejected, (state, action) => {
-        state.verificationLoading = false;
-        state.verificationError =
-          (action.payload as string) || "OTP verification failed";
-        state.verified = false;
+        state.isAuthenticated = false;
+        state.user = null;
       })
       .addCase(verifyLoginOTP.pending, (state) => {
-        state.verificationLoading = true;
-        state.verificationError = null;
+        state.isAuthenticated = true;
       })
       .addCase(verifyLoginOTP.fulfilled, (state, action) => {
-        state.verificationLoading = false;
-        state.verified = true;
         state.user = action.payload.data;
         state.isAuthenticated = true;
         if (state.user?.customer && !state.user.customer.alt_phone_number) {
@@ -503,10 +478,7 @@ const authSlice = createSlice({
         }
       })
       .addCase(verifyLoginOTP.rejected, (state, action) => {
-        state.verificationLoading = false;
-        state.verificationError =
-          (action.payload as string) || "OTP verification failed";
-        state.verified = false;
+        state.isAuthenticated = false;
       })
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;

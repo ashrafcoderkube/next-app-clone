@@ -6,6 +6,7 @@ import Icon from '../customcomponents/Icon';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAppSelector } from '../../redux/hooks';
 import { RootState } from '../../redux/store';
+import { selectProductCategories, selectThemeData } from '@/app/redux/selectors';
 
 function Search() {
   // Hooks
@@ -25,20 +26,8 @@ function Search() {
   const [suggestedTerms, setSuggestedTerms] = useState<string[]>([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
 
-  // Get data from Redux store
-  const themeId = useAppSelector(
-    (state: RootState) => state.storeInfo?.themeId
-  );
-  const productCategories = useAppSelector(
-    (state: RootState) => state.products.productCategories
-  );
-
-  // Get categories from API and map to include name property for compatibility
-  const categories = useMemo(
-    () => productCategories?.sub_categories || [],
-    [productCategories?.sub_categories]
-  );
-
+  const { themeId } = useAppSelector((selectThemeData))
+  const { categories } = useAppSelector(selectProductCategories);
   // Search loading state (to be connected to actual search API when available)
   const searchLoading = false;
 
@@ -242,9 +231,8 @@ function Search() {
         {isSearchOpen && (
           <>
             <div
-              className={`fixed top-full left-1/2  rounded-xl w-full max-w-[19.375rem] sm:max-w-[37.5rem] bg-white shadow-2xl z-50 search-dropdown ${
-                isClosing ? 'search-dropdown-closing' : ''
-              }`}
+              className={`fixed top-full left-1/2  rounded-xl w-full max-w-[19.375rem] sm:max-w-[37.5rem] bg-white shadow-2xl z-50 search-dropdown ${isClosing ? 'search-dropdown-closing' : ''
+                }`}
               style={{
                 backgroundColor:
                   themeContext?.headerBackgroundColor || '#ffffff',
@@ -385,9 +373,8 @@ function Search() {
                 name='chevronDown'
                 stroke={headerTextColor || '#101010'}
                 strokeWidth='1.5'
-                className={`w-4 h-4 ml-1 transition-transform ${
-                  isCategoryOpen ? 'rotate-180' : ''
-                }`}
+                className={`w-4 h-4 ml-1 transition-transform ${isCategoryOpen ? 'rotate-180' : ''
+                  }`}
               />
             </button>
             {isCategoryOpen && (
@@ -477,8 +464,8 @@ function Search() {
                   searchLoading
                     ? 'searchLoading'
                     : searchQuery.trim()
-                    ? 'close'
-                    : 'search'
+                      ? 'close'
+                      : 'search'
                 }
                 strokeWidth={searchLoading ? '0.2' : '1.625'}
                 stroke={headerTextColor || '#101010'}
@@ -491,9 +478,8 @@ function Search() {
         {/* Mobile Dropdown Search */}
         {isSearchOpen && (
           <div
-            className={`fixed top-full left-1/2  rounded-xl w-full max-w-[20.375rem] sm:max-w-[37.5rem] bg-white shadow-2xl z-50 search-dropdown  md:max-w-[37.5rem] search-dropdown md:hidden ${
-              isClosing ? 'search-dropdown-closing' : ''
-            }`}
+            className={`fixed top-full left-1/2  rounded-xl w-full max-w-[20.375rem] sm:max-w-[37.5rem] bg-white shadow-2xl z-50 search-dropdown  md:max-w-[37.5rem] search-dropdown md:hidden ${isClosing ? 'search-dropdown-closing' : ''
+              }`}
           >
             <form
               onSubmit={(e) => {
@@ -538,9 +524,8 @@ function Search() {
                       name={searchLoading ? 'searchLoading' : 'search'}
                       strokeWidth={searchLoading ? '0.2' : '1.625'}
                       stroke={headerTextColor || '#101010'}
-                      className={`w-5 h-5 ${
-                        searchLoading ? 'animate-spin' : ''
-                      }`}
+                      className={`w-5 h-5 ${searchLoading ? 'animate-spin' : ''
+                        }`}
                     />
                   </button>
                 </div>
@@ -613,9 +598,8 @@ function Search() {
         {/* Mobile Dropdown Search */}
         {isSearchOpen && (
           <div
-            className={`fixed top-full left-1/2  rounded-xl w-full max-w-[20.375rem] sm:max-w-[37.5rem] bg-white shadow-2xl z-50 search-dropdown  md:max-w-[37.5rem] search-dropdown md:hidden ${
-              isClosing ? 'search-dropdown-closing' : ''
-            }`}
+            className={`fixed top-full left-1/2  rounded-xl w-full max-w-[20.375rem] sm:max-w-[37.5rem] bg-white shadow-2xl z-50 search-dropdown  md:max-w-[37.5rem] search-dropdown md:hidden ${isClosing ? 'search-dropdown-closing' : ''
+              }`}
           >
             <form
               onSubmit={(e) => {
@@ -660,9 +644,8 @@ function Search() {
                       name={searchLoading ? 'searchLoading' : 'search'}
                       strokeWidth={searchLoading ? '0.2' : '1.625'}
                       stroke={headerTextColor || '#101010'}
-                      className={`w-5 h-5 ${
-                        searchLoading ? 'animate-spin' : ''
-                      }`}
+                      className={`w-5 h-5 ${searchLoading ? 'animate-spin' : ''
+                        }`}
                     />
                   </button>
                 </div>

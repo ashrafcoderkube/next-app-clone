@@ -389,13 +389,11 @@ const CustomProductCardGrid = ({
   };
 
   const handleAddToCartClick = (e: React.MouseEvent) => {
-    console.log("handleAddToCartClick");
     e.preventDefault();
     e.stopPropagation();
 
     if (isWholesaler && product?.variations?.length > 0) {
       const variantToUse = userSelectedVariant;
-      console.log("variantToUse", variantToUse);
       if (!variantToUse) {
         setModalActionType("addToCart");
         setShowSizeModal(true);
@@ -729,19 +727,12 @@ const CustomProductCardGrid = ({
             <button
               name="Add to Cart"
               onClick={(e) => {
-                console.log("add to cart button clicked");
                 e.preventDefault();
-                console.log("e.preventDefault");
                 e.stopPropagation();
-                console.log("e.stopPropagation");
                 if (showGoToCart) {
-                  console.log("open cart popup");
                   dispatch(openCartPopup());
                 } else {
-                  console.log("handle add to cart click");
-                  console.log("e", e);
                   handleAddToCartClick(e);
-                  console.log("handle add to cart click");
                 }
               }}
               className="w-full btn py-3.5 md:text-base !text-sm focus:outline-none flex items-center justify-center"
@@ -826,7 +817,7 @@ const CustomProductCardGrid = ({
 
     return (
       <div
-        className={`product-cont flex flex-col text-start justify-between flex-grow ${
+        className={`product-cont flex flex-col gap-3.5 justify-between flex-grow ${
           themeId === 6 ? "space-y-3" : "gap-[0.5rem]"
         }`}
       >

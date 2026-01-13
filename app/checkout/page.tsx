@@ -1,14 +1,12 @@
 "use client";
 
-import React from "react";
 import { useAppSelector } from "../redux/hooks";
-import { RootState } from "../redux/store";
 import WholesalerCheckout from "./WholesalerCheckout";
 import RetailerCheckout from "./RetailerCheckout";
+import { selectThemeData } from "../redux/selectors";
 
 const Checkout = () => {
-  const { isWholesaler } = useAppSelector((state: RootState) => state.storeInfo);
-
+  const { isWholesaler } = useAppSelector((selectThemeData))
   return (
     <div>
       {isWholesaler ? (

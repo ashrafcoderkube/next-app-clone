@@ -1,4 +1,4 @@
-"use client";
+
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,7 @@ import {
   removeFromWishList,
 } from "@/app/redux/slices/wishlistSlice";
 import useCartQuantity from "@/app/hooks/useCartQuantity";
+import { selectCart, selectStoreInfo, selectThemeData } from "@/app/redux/selectors";
 
 interface ProductVariant {
   id: number;
@@ -107,20 +108,18 @@ const CardComponent = ({
     : product;
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { storeInfo, isWholesaler } = useAppSelector(
-    (state: RootState) => state.storeInfo
-  );
+  const { isWholesaler, themeId } = useAppSelector((selectThemeData));
+  const { storeInfo } = useAppSelector((selectStoreInfo))
   const { wishlist } = useAppSelector((state: RootState) => state.wishlist);
   const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
   const phone_number = storeInfo?.data?.storeinfo?.mobile_no;
-  const { cartItems } = useAppSelector((state: RootState) => state.cart);
+  const { cartItems } = useAppSelector((selectCart));
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
     null
   );
   // subdomain is not in StoreInfoData type, using window.location.origin as fallback
   const subdomain = typeof window !== "undefined" ? window.location.origin : null;
   const wishlistData = wishlist?.data?.wishlist;
-  const themeId = useAppSelector((state: RootState) => state.storeInfo?.themeId);
   const isWishlist =
     (isAuthenticated && isInWishlist(productData?.id, wishlistData)) || false;
   const getProductPrice = () => {

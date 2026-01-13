@@ -20,7 +20,6 @@ export default function NotFound() {
             Home
           </ButtonLink>
           <ButtonLink
-          
             to="/contact"
             showIcon={false}
             buttonStyle="outline"

@@ -12,30 +12,7 @@ import {
   getFromSessionStorage,
   setToSessionStorage,
 } from "../utils/sessionStorage";
-
-// Simple debounce utility
-// function debounce<T extends (...args: any[]) => any>(
-//   func: T,
-//   wait: number
-// ): T & { cancel: () => void } {
-//   let timeout: NodeJS.Timeout | null = null;
-
-//   const debounced = ((...args: Parameters<T>) => {
-//     if (timeout) clearTimeout(timeout);
-//     timeout = setTimeout(() => {
-//       func(...args);
-//     }, wait);
-//   }) as T & { cancel: () => void };
-
-//   debounced.cancel = () => {
-//     if (timeout) {
-//       clearTimeout(timeout);
-//       timeout = null;
-//     }
-//   };
-
-//   return debounced;
-// }
+import { selectProductCategories } from "../redux/selectors";
 
 interface Filters {
   categories: string[];
@@ -79,9 +56,7 @@ const useShopProducts = (): UseShopProductsReturn => {
   const searchQuery = searchParams.get("search");
 
   // Redux state
-  const { productCategories } = useAppSelector(
-    (state: RootState) => state.products
-  );
+  const { categories } = useAppSelector(selectProductCategories);
   const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
   // Local state
   const [products, setProducts] = useState<any[]>([]);
@@ -92,17 +67,10 @@ const useShopProducts = (): UseShopProductsReturn => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const lastLoadedFilterRef = useRef<string | null>(null);
-  const resetPageOnClearRef = useRef(false);
   const isInitialMountRef = useRef(true);
 
-  // Categories
-  const categories = useMemo(
-    () => productCategories?.sub_categories || [],
-    [productCategories]
-  );
-
   useEffect(() => {
-    if(!productCategories) {
+    if (categories.length === 0) {
       dispatch(fetchProductCategories());
     }
   }, [dispatch]);
@@ -213,15 +181,15 @@ const useShopProducts = (): UseShopProductsReturn => {
             setIsInitialLoad(false);
             setIsLoading(false);
             setIsFilterChange(false);
-            
+
             // Calculate hasMore based on cached products length
             const hasMoreProducts = cachedProducts.length % PAGE_SIZE === 0;
             setHasMore(hasMoreProducts);
-            
+
             // Set current page based on cached products
             const calculatedPage = Math.ceil(cachedProducts.length / PAGE_SIZE);
             setCurrentPage(calculatedPage + 1);
-            
+
             // ALWAYS call these APIs even when products are cached
             // Fetch product variations for filters (sizes, etc.) - NO CACHE
             const variationParams: any = {};

@@ -30,7 +30,7 @@ export default function SignUp() {
   const themeContext = useTheme() || {};
   const { bottomFooterTextColor } = themeContext;
   const themeId = useAppSelector((state: RootState) => state.storeInfo?.themeId);
-  const { loading, verificationLoading } = useAppSelector((state: RootState) => state.auth);
+  const { loading } = useAppSelector((state: RootState) => state.auth);
   const { cartItems } = useAppSelector((state: RootState) => state.cart);
 
   const formik = useFormik({
@@ -241,7 +241,7 @@ export default function SignUp() {
                   <div className="flex flex-col gap-2 xs:gap-3 sm:gap-[0.9879rem] mt-2">
                     <LoadingButton
                       onClick={handleConfirm}
-                      loading={verificationLoading}
+                      loading={loading}
                       disabled={otp.join("").length !== 4}
                       text="Confirm"
                     />

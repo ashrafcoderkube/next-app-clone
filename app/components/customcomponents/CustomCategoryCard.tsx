@@ -58,7 +58,7 @@ export default function CustomCategoryCard({
       titleWrapper:
         'absolute bottom-[-5px] category-title px-2 py-[1rem] 2xl:py-[1.5rem] rounded-lg rounded-t-none overflow-hidden left-0 right-0',
       title:
-        'text-sm font-bold sm:text-[1.125rem] whitespace-normal !text-white',
+        'text-sm font-bold sm:text-[1.125rem] whitespace-normal !text-white line-clamp-1',
       extra: null,
     },
 
@@ -134,15 +134,15 @@ export default function CustomCategoryCard({
 
   // Skeleton component for loading state
   const SkeletonCard = () => (
-    <div className={v.outerWrapper || ""}>
-      <div className="relative">
+    <div className={v.outerWrapper || ''}>
+      <div className='relative'>
         <div
           className={`${v.wrapper} animate-pulse`}
           style={
             themeId === 4 || themeId === 5 || themeId === 6
               ? {
-                  border: "1px solid rgba(16, 16, 16, 0.06)",
-                  borderRadius: themeId === 5 ? "0" : "1rem",
+                  border: '1px solid rgba(16, 16, 16, 0.06)',
+                  borderRadius: themeId === 5 ? '0' : '1rem',
                 }
               : undefined
           }
@@ -154,20 +154,20 @@ export default function CustomCategoryCard({
 
           {/* Skeleton Overlay for Theme 6 */}
           {themeId === 6 && (
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-400/60 via-gray-400/40 to-transparent z-[5] pointer-events-none" />
+            <div className='absolute inset-0 bg-gradient-to-t from-gray-400/60 via-gray-400/40 to-transparent z-[5] pointer-events-none' />
           )}
 
           {/* Skeleton Number Badge for Theme 6 */}
           {themeId === 6 && (
-            <div className="absolute top-5 left-5 w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center z-10">
-              <div className="w-4 h-4 bg-gray-400 rounded" />
+            <div className='absolute top-5 left-5 w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center z-10'>
+              <div className='w-4 h-4 bg-gray-400 rounded' />
             </div>
           )}
 
           {/* Skeleton Arrow Icon for Theme 6 */}
           {themeId === 6 && (
-            <div className="absolute bottom-10 right-5 w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center shadow-lg z-10">
-              <div className="w-4 h-4 bg-gray-400 rounded" />
+            <div className='absolute bottom-10 right-5 w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center shadow-lg z-10'>
+              <div className='w-4 h-4 bg-gray-400 rounded' />
             </div>
           )}
 
@@ -177,7 +177,7 @@ export default function CustomCategoryCard({
               style={
                 themeId === 2
                   ? {
-                      backgroundColor: "#f9f9f9",
+                      backgroundColor: '#f9f9f9',
                     }
                   : undefined
               }
@@ -186,29 +186,41 @@ export default function CustomCategoryCard({
               <div
                 className={`${v.title} bg-gray-300 rounded h-6 mb-2`}
                 style={{
-                  backgroundColor: themeId === 1 || themeId === 6 ? 'rgba(255,255,255,0.3)' : '#e5e7eb',
-                  color: 'transparent'
+                  backgroundColor:
+                    themeId === 1 || themeId === 6
+                      ? 'rgba(255,255,255,0.3)'
+                      : '#e5e7eb',
+                  color: 'transparent',
                 }}
               >
-                <span className="invisible">Skeleton Title</span>
+                <span className='invisible'>Skeleton Title</span>
               </div>
 
               {/* Skeleton Product Count for Theme 6 */}
               {themeId === 6 && (
-                <div className="h-4 bg-gray-300 rounded w-16 mb-3" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }} />
+                <div
+                  className='h-4 bg-gray-300 rounded w-16 mb-3'
+                  style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+                />
               )}
 
               {/* Skeleton Progress line for Theme 6 */}
               {themeId === 6 && (
-                <div className="mt-4 h-0.5 bg-gray-300 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                  <div className="h-full w-0 bg-gray-400 rounded-full" />
+                <div
+                  className='mt-4 h-0.5 bg-gray-300 rounded-full overflow-hidden'
+                  style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+                >
+                  <div className='h-full w-0 bg-gray-400 rounded-full' />
                 </div>
               )}
 
               {/* Skeleton Extra content */}
               {v.extra && (
-                <div className="h-4 bg-gray-300 rounded w-20 mt-2" style={{ color: 'transparent' }}>
-                  <span className="invisible">Shop Now</span>
+                <div
+                  className='h-4 bg-gray-300 rounded w-20 mt-2'
+                  style={{ color: 'transparent' }}
+                >
+                  <span className='invisible'>Shop Now</span>
                 </div>
               )}
             </div>
@@ -219,7 +231,7 @@ export default function CustomCategoryCard({
         {themeId === 3 && (
           <div className={v.titleWrapper}>
             <div className={`${v.title} bg-gray-300 rounded h-6`}>
-              <span className="invisible">Skeleton Title</span>
+              <span className='invisible'>Skeleton Title</span>
             </div>
           </div>
         )}
@@ -234,7 +246,7 @@ export default function CustomCategoryCard({
 
   return (
     <div className={v.outerWrapper || ''}>
-      <div className='relative p-3'>
+      <div className='relative px-3'>
         <div
           className={v.wrapper}
           onClick={goToShop}

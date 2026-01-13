@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Loader from "../components/customcomponents/Loader";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchAboutSection } from "../redux/slices/aboutSection";

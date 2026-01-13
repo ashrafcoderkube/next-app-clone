@@ -5,7 +5,6 @@ import CardComponent from "./customcomponents/CardComponent";
 import { useEffect, useCallback } from "react";
 import { fetchNewArrivals } from "../redux/slices/productSlice";
 import { useTheme } from "../contexts/ThemeContext";
-import SwiperNavButton from "./customcomponents/SwiperNavButton";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 

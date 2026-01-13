@@ -17,19 +17,36 @@ axiosInstance.interceptors.request.use(
       config.headers["API-KEY"] = apiKey;
     }
 
-    // Add authentication token from localStorage if available
+    // Add authentication token - first check Redux state, then localStorage
     if (typeof window !== "undefined") {
-      const persistedState = localStorage.getItem("reduxState");
-      if (persistedState) {
+      let token = null;
+
+      // First, try to get token from Redux state (immediate access)
+      try {
+        // Dynamic import to avoid circular dependency
+        const { store } = require("../redux/store");
+        const state = store.getState();
+        token = state?.auth?.user?.token;
+      } catch (reduxError) {
+        console.warn("Failed to access Redux state:", reduxError);
+      }
+
+      // If no token from Redux, try localStorage
+      if (!token) {
         try {
-          const parsedState = JSON.parse(persistedState);
-          const token = parsedState?.auth?.user?.token;
-          if (token) {
-            config.headers["Authorization"] = `Bearer ${token}`;
+          const persistedState = localStorage.getItem("reduxState");
+          if (persistedState) {
+            const parsedState = JSON.parse(persistedState);
+            token = parsedState?.auth?.user?.token;
           }
-        } catch (err) {
-          console.error("Failed to parse reduxState:", err);
+        } catch (storageError) {
+          console.warn("Failed to parse reduxState from localStorage:", storageError);
         }
+      }
+
+      // Set authorization header if token is available
+      if (token && typeof token === 'string') {
+        config.headers["Authorization"] = `Bearer ${token}`;
       }
     }
 

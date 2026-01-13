@@ -1,25 +1,22 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import Loader from "../components/customcomponents/Loader";
 import Icon from "../components/customcomponents/Icon";
 import CustomCategoryCard from "../components/customcomponents/CustomCategoryCard";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { RootState } from "../redux/store";
 import { fetchProductCategories } from "../redux/slices/productSlice";
+import { selectProductCategories } from "../redux/selectors";
 
 function Categories() {
-  const { productCategories, loading } = useAppSelector((state: RootState) => state.products);
-const dispatch = useAppDispatch();
+  const { categories, loading } = useAppSelector((selectProductCategories));
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    if(!productCategories) {
+    if (categories.length === 0) {
       dispatch(fetchProductCategories());
     }
-  }, [dispatch]); 
-  const categories = useMemo(
-    () => productCategories?.sub_categories || [],
-    [productCategories?.sub_categories]
-  );
+  }, [dispatch]);
 
   return (
     <div>
@@ -27,12 +24,7 @@ const dispatch = useAppDispatch();
         {loading ? (
           <Loader />
         ) : categories.length > 0 ? (
-          <div
-            className="grid-responsive-shop word-break"
-          // variants={containerVariants}
-          // initial="hidden"
-          // animate="visible"
-          >
+          <div className="grid-responsive-shop word-break">
             {categories.map((item, index) => (
               <div key={item.sub_category_id || index}>
                 <CustomCategoryCard item={item} index={index} />

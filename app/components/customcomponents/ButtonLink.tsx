@@ -1,4 +1,4 @@
-"use client";
+
 
 /**
  * ButtonLink Component
@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useTheme } from "../../contexts/ThemeContext";
 import Icon from "./Icon";
 import { useAppSelector } from "@/app/redux/hooks";
-import { RootState } from "@/app/redux/store";
+import { selectThemeData } from "@/app/redux/selectors";
 
 // ============================================
 // Variants Configuration
@@ -203,9 +203,7 @@ function LinkButton({
   ...props
 }: LinkButtonProps) {
   const themeContext = useTheme() || {};
-  const themeId = useAppSelector(
-    (state: RootState) => state.storeInfo?.themeId
-  );
+  const { themeId } = useAppSelector((selectThemeData))
 
   const {
     style,
@@ -418,7 +416,7 @@ function ButtonLink({
   disabled = false,
   buttonType,
 }: ButtonLinkProps) {
-  const { themeId } = useAppSelector((state: RootState) => state.storeInfo);
+  const { themeId } = useAppSelector((selectThemeData))
 
   const getThemeConfig = (themeId: number) => {
     switch (themeId) {
