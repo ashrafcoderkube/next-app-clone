@@ -12,6 +12,7 @@ import {
   getFromSessionStorage,
   setToSessionStorage,
 } from '../../utils/sessionStorage';
+import { requestIdleCallbackSafe } from '../../utils/requestIdleCallback';
 
 /* ------------------ HERO IMAGE ------------------ */
 const SingleImage = React.memo(({ data }: { data: any }) => {
@@ -102,7 +103,7 @@ const Banner = React.memo(() => {
         payload: cachedData,
       });
     } else {
-      requestIdleCallback(() => {
+      requestIdleCallbackSafe(() => {
         dispatch(fetchHomeSection())
           .unwrap()
           .then((result) => {
@@ -111,7 +112,7 @@ const Banner = React.memo(() => {
             }
           })
           .catch(console.error);
-      });
+      }, { timeout: 2000 });
     }
   }, [dispatch]);
 

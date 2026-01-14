@@ -101,6 +101,7 @@
 
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { clearState, loadState, saveState } from "../utils/sessionStorage";
+import { requestIdleCallbackSafe } from "../utils/requestIdleCallback";
 
 // redux-state-sync will be loaded dynamically after store creation to avoid blocking chunks
 // We'll initialize it separately after the store is created
@@ -243,11 +244,7 @@ if (typeof window !== "undefined") {
   };
 
   // Defer initialization
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(initStateSync, { timeout: 2000 });
-  } else {
-    setTimeout(initStateSync, 500);
-  }
+  requestIdleCallbackSafe(initStateSync, { timeout: 2000 });
 }
 
 // Optimized: Cache results and use faster algorithm

@@ -12,26 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { ToastContainer } from "react-toastify";
 
-// Mark as dynamic because we use headers() for subdomain validation
-// This is required for subdomain-based routing
-// export const dynamic = "force-dynamic";
 
-export async function generateMetadata(): Promise<Metadata> {
-  // Return default metadata - will be updated client-side by MetadataUpdater
-  return {
-    title: {
-      default: "JDWebnship | Home",
-      template: "JDWebnship | %s",
-    },
-    description: "Welcome to JDWebnship - Shop the latest products",
-    keywords: "",
-    icons: {
-      icon: "/favicon.ico",
-      shortcut: "/favicon.ico",
-      apple: "/favicon.ico",
-    },
-  };
-}
 
 export default function RootLayout({
   children,

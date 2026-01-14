@@ -7,6 +7,7 @@ import { selectStoreInfo } from "../redux/selectors";
 import { StoreInfoResponse } from "../types/storeinfo";
 import { initGA } from "../utils/analytics";
 import axiosInstance from "../utils/axiosInstance";
+import { requestIdleCallbackSafe } from "../utils/requestIdleCallback";
 
 export default function StoreInfoInitializer() {
   const dispatch = useAppDispatch();
@@ -41,15 +42,9 @@ export default function StoreInfoInitializer() {
 
     gaInitializedRef.current = true;
 
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(() => {
-        initGA(GA_ID);
-      }, { timeout: 2000 });
-    } else {
-      setTimeout(() => {
-        initGA(GA_ID);
-      }, 100);
-    }
+    requestIdleCallbackSafe(() => {
+      initGA(GA_ID);
+    }, { timeout: 2000 });
   }, [storeInfo]);
 
   // This component doesn't render anything
