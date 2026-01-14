@@ -1,8 +1,5 @@
 import type { NextConfig } from "next";
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
-// This is required for local development to use Cloudflare bindings
-initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
