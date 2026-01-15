@@ -4,8 +4,7 @@ import axios from "axios";
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://nodeapi.jdwebnship.com/api/",
   headers: {
-    "Content-Type": "application/json",
-    "X-REQUEST-HOST": typeof window !== "undefined" ? "https://next-app-clone.vercel.app": "https://next-app-clone.vercel.app",
+    "Content-Type": "application/json"
   },
 });
 
