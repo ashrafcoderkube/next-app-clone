@@ -1,29 +1,34 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Profile from "./Profile";
-import Icon from "../customcomponents/Icon";
-import Loader from "../customcomponents/Loader";
-import Search from "./Search";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { StoreInfoResponse } from "../../types/storeinfo";
-import { useTheme } from "@/app/contexts/ThemeContext";
-import { closeCartPopup } from "@/app/redux/slices/cartSlice";
-import SafeImage from "../SafeImage";
-import { selectCart, selectProductCategories, selectStoreInfo, selectTrackOrder } from "@/app/redux/selectors";
-import dynamic from "next/dynamic";
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import Profile from './Profile';
+import Icon from '../customcomponents/Icon';
+import Loader from '../customcomponents/Loader';
+import Search from './Search';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { StoreInfoResponse } from '../../types/storeinfo';
+import { useTheme } from '@/app/contexts/ThemeContext';
+import { closeCartPopup } from '@/app/redux/slices/cartSlice';
+import SafeImage from '../SafeImage';
+import {
+  selectCart,
+  selectProductCategories,
+  selectStoreInfo,
+  selectTrackOrder,
+} from '@/app/redux/selectors';
+import dynamic from 'next/dynamic';
 
 // Lazy load heavy components
-const MobileDrawer = dynamic(() => import("./MobileDrawer"), { ssr: false });
-const CategoryGrid = dynamic(() => import("../customcomponents/CategoryGrid"), {
+const MobileDrawer = dynamic(() => import('./MobileDrawer'), { ssr: false });
+const CategoryGrid = dynamic(() => import('../customcomponents/CategoryGrid'), {
   ssr: false,
 });
-const OrderDetailsPopup = dynamic(() => import("../model/OrderDetailsPopup"), {
+const OrderDetailsPopup = dynamic(() => import('../model/OrderDetailsPopup'), {
   ssr: false,
 });
-const MiniCart = dynamic(() => import("./minicart"), { ssr: false });
+const MiniCart = dynamic(() => import('./minicart'), { ssr: false });
 
 interface HeaderProps {
   offsetY?: number;
@@ -124,13 +129,15 @@ export default function Header({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navContainerClass = `${themeId !== 3 ? "nav-container" : ""
-    } px-container transition-all duration-300 ease-out ${themeId !== 3
+  const navContainerClass = `${
+    themeId !== 3 ? 'nav-container' : ''
+  } px-container transition-all duration-300 ease-out ${
+    themeId !== 3
       ? isSticky
-        ? "sm:h-[6.25rem] h-[5rem]"
-        : "sm:h-[6.25rem] h-[5rem]"
-      : ""
-    }`;
+        ? 'sm:h-[6.25rem] h-[5rem]'
+        : 'sm:h-[6.25rem] h-[5rem]'
+      : ''
+  }`;
 
   const navStyle = {
     backgroundColor: themeContext?.headerBackgroundColor || '#ffffff',
@@ -149,11 +156,12 @@ export default function Header({
 
     return (
       <Link
-        className={`${themeId === 1
-          ? "center-nav flex items-center lg:justify-center relative lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2"
-          : "center-nav flex items-center shrink-0"
-          } `}
-        href="/"
+        className={`${
+          themeId === 1
+            ? 'center-nav flex items-center lg:justify-center relative lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2'
+            : 'center-nav flex items-center shrink-0'
+        } `}
+        href='/'
       >
         {logo ? (
           <SafeImage
@@ -161,7 +169,11 @@ export default function Header({
             alt={storeName}
             width={160}
             height={64}
-            className={`sm:h-[4rem] h-16 transition-all duration-300 ease-out object-contain !w-auto`}
+            // className={`sm:h-[4rem] h-16 transition-all duration-300 ease-out object-contain !w-auto`}
+            className='h-16 w-auto object-contain' // Remove ! and let container control size
+            priority={true} // Logo is critical, load immediately
+            isBlur={false} // Disable blur to prevent layout shift
+            // style={{ aspectRatio: "160/64" }} // Explicitly set aspect ratio
           />
         ) : (
           <h1
@@ -178,37 +190,37 @@ export default function Header({
 
   // Define navItems array at the top of your component
   const navItems = [
-    { label: "Home", to: "/" },
-    { label: "Shop", to: "/shop" },
-    { label: "Categories", to: "/categories" },
-    { label: "About", to: "/about" },
-    { label: "Contact", to: "/contact" },
-    { label: "Track Order", to: "/track-order" },
+    { label: 'Home', to: '/' },
+    { label: 'Shop', to: '/shop' },
+    { label: 'Categories', to: '/categories' },
+    { label: 'About', to: '/about' },
+    { label: 'Contact', to: '/contact' },
+    { label: 'Track Order', to: '/track-order' },
   ];
 
   // Helper function to get specific styling for each nav item in Theme 1
   const getTheme1NavStyle = (label: string) => {
     const styles: Record<string, string> = {
-      "Home": "hover:lg:after:scale-x-55",
-      "Categories": "hover:after:scale-x-68",
-      "Shop": "hover:after:scale-x-50",
-      "Track Order": "hover:lg:after:scale-x-95",
-      "About": "hover:lg:after:scale-x-68",
-      "Contact": "hover:lg:after:scale-x-72",
+      Home: 'hover:lg:after:scale-x-55',
+      Categories: 'hover:after:scale-x-68',
+      Shop: 'hover:after:scale-x-50',
+      'Track Order': 'hover:lg:after:scale-x-95',
+      About: 'hover:lg:after:scale-x-68',
+      Contact: 'hover:lg:after:scale-x-72',
     };
-    return styles[label] || "hover:after:scale-x-100";
+    return styles[label] || 'hover:after:scale-x-100';
   };
 
   const themeLayout = {
     1: (
       <>
-        <div className="hidden lg:flex items-center gap-3 lg:gap-4 h-full">
-          <div className="left-nav hidden lg:flex items-center h-full">
-            {navItems.slice(0, 3).map((item) => (
-              item.label === "Categories" ? (
+        <div className='hidden lg:flex items-center gap-3 lg:gap-4 h-full'>
+          <div className='left-nav hidden lg:flex items-center h-full'>
+            {navItems.slice(0, 3).map((item) =>
+              item.label === 'Categories' ? (
                 <div
                   key={item.label}
-                  className="relative h-full"
+                  className='relative h-full'
                   onMouseEnter={() => setIsShopMegaMenuOpen(true)}
                   onMouseLeave={() => setIsShopMegaMenuOpen(false)}
                 >
@@ -216,37 +228,42 @@ export default function Header({
                     className={`relative text-[0.875rem] xl:text-[1rem] pr-10 font-medium uppercase py-3 h-full flex items-center outline-none
                    transition-colors duration-300
                    after:content-[''] after:absolute after:left-0 after:bottom-[35%] after:w-full after:h-[2px] after:bg-current
-                   after:transform after:origin-left after:scale-x-0 after:transition-transform after:duration-300 ${getTheme1NavStyle(item.label)}`}
+                   after:transform after:origin-left after:scale-x-0 after:transition-transform after:duration-300 ${getTheme1NavStyle(
+                     item.label
+                   )}`}
                     href={item.to}
-                    style={{
-                      color: headerTextColor || "#101010",
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        color: headerTextColor || '#101010',
+                      } as React.CSSProperties
+                    }
                   >
                     Category
                   </Link>
                   {isShopMegaMenuOpen && (
                     <div
-                      className="fixed left-0 top-[100%] py-6 bg-white border-b border-gray-200/40 shadow-2xl z-50 w-[100vw]"
+                      className='fixed left-0 top-[100%] py-6 bg-white border-b border-gray-200/40 shadow-2xl z-50 w-full'
                       style={{
-                        backgroundColor: themeContext?.headerBackgroundColor || "#fff",
+                        backgroundColor:
+                          themeContext?.headerBackgroundColor || '#fff',
                       }}
                     >
-                      <div className="flex items-center w-full">
+                      <div className='flex items-center w-full'>
                         {loading ? (
                           <Loader />
                         ) : categories.length > 0 ? (
-                          <div className="w-full px-container mx-auto">
+                          <div className='w-full mx-auto'>
                             <CategoryGrid
                               categories={categories}
                               headerTextColor={headerTextColor}
                             />
                           </div>
                         ) : (
-                          <div className="flex items-center justify-center p-4 w-full">
+                          <div className='flex items-center justify-center p-4 w-full'>
                             <p
-                              className="text-sm "
+                              className='text-sm '
                               style={{
-                                color: textColor || "#1e293b",
+                                color: textColor || '#1e293b',
                               }}
                             >
                               No categories found
@@ -263,16 +280,18 @@ export default function Header({
                   className={`relative text-[0.875rem] xl:text-[1rem] pr-10 font-medium uppercase py-3 h-full flex items-center outline-none
                  transition-colors duration-300
                  lg:after:content-[''] lg:after:absolute lg:after:left-0 lg:after:bottom-[35%] lg:after:w-full lg:after:h-[2px] lg:after:bg-current
-                 lg:after:transform lg:after:origin-left lg:after:scale-x-0 lg:after:transition-transform lg:after:duration-300 ${getTheme1NavStyle(item.label)}`}
+                 lg:after:transform lg:after:origin-left lg:after:scale-x-0 lg:after:transition-transform lg:after:duration-300 ${getTheme1NavStyle(
+                   item.label
+                 )}`}
                   href={item.to}
                   style={{
-                    color: headerTextColor || "#111111",
+                    color: headerTextColor || '#111111',
                   }}
                 >
                   {item.label}
                 </Link>
               )
-            ))}
+            )}
           </div>
         </div>
 
@@ -281,21 +300,29 @@ export default function Header({
           headerTextColor={headerTextColor}
         />
 
-        <div className="right-nav flex items-center gap-3 sm:gap-4 h-full">
-          <div className="hidden lg:flex items-center h-full">
+        <div className='right-nav flex items-center gap-3 sm:gap-4 h-full'>
+          <div className='hidden lg:flex items-center h-full'>
             {navItems.slice(3).map((item, index) => (
               <Link
                 key={item.label}
-                className={`relative text-[0.875rem] xl:text-[1rem] ${index === navItems.slice(3).length - 1 ? 'pr-2' : 'pr-10'} font-medium uppercase py-3 h-full flex items-center outline-none
+                className={`relative text-[0.875rem] xl:text-[1rem] ${
+                  index === navItems.slice(3).length - 1 ? 'pr-2' : 'pr-10'
+                } font-medium uppercase py-3 h-full flex items-center outline-none
                transition-colors duration-300
                lg:after:content-[''] lg:after:absolute lg:after:left-0 lg:after:bottom-[35%] lg:after:w-full lg:after:h-[2px] lg:after:bg-current
-               lg:after:transform lg:after:origin-left lg:after:scale-x-0 lg:after:transition-transform lg:after:duration-300 ${getTheme1NavStyle(item.label)}`}
+               lg:after:transform lg:after:origin-left lg:after:scale-x-0 lg:after:transition-transform lg:after:duration-300 ${getTheme1NavStyle(
+                 item.label
+               )}`}
                 href={item.to}
                 style={{
-                  color: headerTextColor || "#111111",
+                  color: headerTextColor || '#111111',
                 }}
               >
-                {item.label === "About" ? "About Us" : item.label === "Contact" ? "Contact Us" : item.label}
+                {item.label === 'About'
+                  ? 'About Us'
+                  : item.label === 'Contact'
+                  ? 'Contact Us'
+                  : item.label}
               </Link>
             ))}
           </div>
@@ -327,14 +354,16 @@ export default function Header({
               fill='none'
             />
           </div>
-          <div className="relative lg:hidden cursor-pointer mt-[5px]"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <div
+            className='relative lg:hidden cursor-pointer mt-[5px]'
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
             <Icon
-              name="mobileMenu"
-              stroke={headerTextColor || "#111111"}
-              strokeWidth="1.625"
-              viewBox="0 0 26 26"
-              fill="none"
+              name='mobileMenu'
+              stroke={headerTextColor || '#111111'}
+              strokeWidth='1.625'
+              viewBox='0 0 26 26'
+              fill='none'
             />
           </div>
         </div>
@@ -352,13 +381,13 @@ export default function Header({
           </div>
         </div>
 
-        <div className="right-nav flex items-center gap-3 sm:gap-7.5 h-full">
-          <div className="hidden lg:flex items-center h-full gap-6">
-            {navItems.map((item) => (
-              item.label === "Categories" ? (
+        <div className='right-nav flex items-center gap-3 sm:gap-7.5 h-full'>
+          <div className='hidden lg:flex items-center h-full gap-6'>
+            {navItems.map((item) =>
+              item.label === 'Categories' ? (
                 <div
                   key={item.label}
-                  className="relative h-full"
+                  className='relative h-full'
                   onMouseEnter={() => setIsShopMegaMenuOpen(true)}
                   onMouseLeave={() => setIsShopMegaMenuOpen(false)}
                 >
@@ -368,35 +397,38 @@ export default function Header({
                    lg:after:content-[''] lg:after:absolute lg:after:left-0 lg:after:bottom-[30%] lg:after:w-full lg:after:h-[2px] lg:after:bg-current
                    after:transform after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100"
                     href={item.to}
-                    style={{
-                      color: headerTextColor || "#101010",
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        color: headerTextColor || '#101010',
+                      } as React.CSSProperties
+                    }
                   >
                     Category
                   </Link>
                   {isShopMegaMenuOpen && (
                     <div
-                      className="fixed left-0 top-[100%] py-6 bg-white border-b border-gray-200/40 shadow-2xl z-50 w-[100vw]"
+                      className='fixed left-0 top-[100%] py-6 bg-white border-b border-gray-200/40 shadow-2xl z-50 w-full'
                       style={{
-                        backgroundColor: themeContext?.headerBackgroundColor || "#fff",
+                        backgroundColor:
+                          themeContext?.headerBackgroundColor || '#fff',
                       }}
                     >
-                      <div className="flex items-center w-full">
+                      <div className='flex items-center w-full'>
                         {loading ? (
                           <Loader />
                         ) : categories.length > 0 ? (
-                          <div className="w-full px-container mx-auto">
+                          <div className='w-full mx-auto'>
                             <CategoryGrid
                               categories={categories}
                               headerTextColor={headerTextColor}
                             />
                           </div>
                         ) : (
-                          <div className="flex items-center justify-center p-4 w-full">
+                          <div className='flex items-center justify-center p-4 w-full'>
                             <p
-                              className="text-sm "
+                              className='text-sm '
                               style={{
-                                color: textColor || "#1e293b",
+                                color: textColor || '#1e293b',
                               }}
                             >
                               No categories found
@@ -414,13 +446,17 @@ export default function Header({
                  transition-colors duration-300 lg:after:content-['']  lg:after:absolute lg:after:left-0 lg:after:bottom-[30%] lg:after:w-full lg:after:h-[2px] lg:after:bg-current lg:after:transform lg:after:origin-left lg:after:scale-x-0 lg:after:transition-transform lg:after:duration-300 hover:lg:after:scale-x-100"
                   href={item.to}
                   style={{
-                    color: headerTextColor || "#101010",
+                    color: headerTextColor || '#101010',
                   }}
                 >
-                  {item.label === "About" ? "About Us" : item.label === "Contact" ? "Contact Us" : item.label}
+                  {item.label === 'About'
+                    ? 'About Us'
+                    : item.label === 'Contact'
+                    ? 'Contact Us'
+                    : item.label}
                 </Link>
               )
-            ))}
+            )}
           </div>
           <div className='flex gap-[0.973rem] items-center'>
             <div className='md:hidden'>
@@ -454,14 +490,16 @@ export default function Header({
                 fill='none'
               />
             </div>
-            <div className="relative lg:hidden cursor-pointer mt-[5px]"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <div
+              className='relative lg:hidden cursor-pointer mt-[5px]'
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
               <Icon
-                name="mobileMenu"
-                stroke={headerTextColor || "#111111"}
-                strokeWidth="1.625"
-                viewBox="0 0 26 26"
-                fill="none"
+                name='mobileMenu'
+                stroke={headerTextColor || '#111111'}
+                strokeWidth='1.625'
+                viewBox='0 0 26 26'
+                fill='none'
               />
             </div>
           </div>
@@ -511,26 +549,28 @@ export default function Header({
                 fill='none'
               />
             </div>
-            <div className="relative lg:hidden cursor-pointer mt-[5px]"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <div
+              className='relative lg:hidden cursor-pointer mt-[5px]'
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
               <Icon
-                name="mobileMenu"
-                stroke={headerTextColor || "#111111"}
-                strokeWidth="1.625"
-                viewBox="0 0 26 26"
-                fill="none"
+                name='mobileMenu'
+                stroke={headerTextColor || '#111111'}
+                strokeWidth='1.625'
+                viewBox='0 0 26 26'
+                fill='none'
               />
             </div>
           </div>
         </div>
 
-        <div className="right-nav hidden lg:flex items-center gap-3 sm:gap-7.5 justify-between transition-all duration-300 ease-out">
-          <div className="hidden lg:flex items-center gap-6 h-full">
-            {navItems.map((item) => (
-              item.label === "Categories" ? (
+        <div className='right-nav hidden lg:flex items-center gap-3 sm:gap-7.5 justify-between transition-all duration-300 ease-out'>
+          <div className='hidden lg:flex items-center gap-6 h-full'>
+            {navItems.map((item) =>
+              item.label === 'Categories' ? (
                 <div
                   key={item.label}
-                  className="relative h-full"
+                  className='relative h-full'
                   onMouseEnter={() => setIsShopMegaMenuOpen(true)}
                   onMouseLeave={() => setIsShopMegaMenuOpen(false)}
                 >
@@ -538,34 +578,35 @@ export default function Header({
                     className={`relative text-[0.875rem] lg:text-[1rem] font-medium  flex items-center outline-none transition-all duration-300 py-5 h-full`}
                     href={item.to}
                     style={{
-                      color: headerTextColor || "#101010",
+                      color: headerTextColor || '#101010',
                     }}
                   >
                     Category
                   </Link>
                   {isShopMegaMenuOpen && (
                     <div
-                      className="fixed left-0 top-[100%] px-container py-6 bg-white border-b  border-gray-200/40 shadow-2xl z-50 w-[100vw]"
+                      className='fixed left-0 top-[100%] px-container py-6 bg-white border-b  border-gray-200/40 shadow-2xl z-50 w-[100vw]'
                       style={{
-                        backgroundColor: themeContext?.headerBackgroundColor || "#fff",
+                        backgroundColor:
+                          themeContext?.headerBackgroundColor || '#fff',
                       }}
                     >
-                      <div className="flex items-center w-full">
+                      <div className='flex items-center w-full'>
                         {loading ? (
                           <Loader />
                         ) : categories.length > 0 ? (
-                          <div className="w-full mx-auto">
+                          <div className='w-full mx-auto'>
                             <CategoryGrid
                               categories={categories}
                               headerTextColor={headerTextColor}
                             />
                           </div>
                         ) : (
-                          <div className="flex items-center justify-center p-4 w-full">
+                          <div className='flex items-center justify-center p-4 w-full'>
                             <p
-                              className="text-sm "
+                              className='text-sm '
                               style={{
-                                color: textColor || "#1e293b",
+                                color: textColor || '#1e293b',
                               }}
                             >
                               No categories found
@@ -582,13 +623,17 @@ export default function Header({
                   className={`relative text-[0.875rem] lg:text-[1rem] font-medium  flex items-center outline-none transition-all duration-300`}
                   href={item.to}
                   style={{
-                    color: headerTextColor || "#101010",
+                    color: headerTextColor || '#101010',
                   }}
                 >
-                  {item.label === "About" ? "About Us" : item.label === "Contact" ? "Contact Us" : item.label}
+                  {item.label === 'About'
+                    ? 'About Us'
+                    : item.label === 'Contact'
+                    ? 'Contact Us'
+                    : item.label}
                 </Link>
               )
-            ))}
+            )}
           </div>
           <div className='sm:flex text-base gap-2 sm:gap-4 customer-care hidden'>
             {storeInfo?.data?.storeinfo?.email && (
@@ -633,58 +678,60 @@ export default function Header({
     ),
     4: (
       <>
-        <div className="mx-auto w-full">
-          <div className="flex items-center justify-between ">
+        <div className='mx-auto w-full'>
+          <div className='flex items-center justify-between '>
             <CommonLogo
               storeInfo={storeInfo}
               headerTextColor={headerTextColor}
             />
 
-            <div className="hidden lg:flex items-center h-full gap-6">
-              {navItems.map((item) => (
-                item.label === "Categories" ? (
+            <div className='hidden lg:flex items-center h-full gap-6'>
+              {navItems.map((item) =>
+                item.label === 'Categories' ? (
                   <div
                     key={item.label}
-                    className="relative h-full"
+                    className='relative h-full'
                     onMouseEnter={() => setIsShopMegaMenuOpen(true)}
                     onMouseLeave={() => setIsShopMegaMenuOpen(false)}
                   >
                     <Link
-                      className="relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
-                     transition-colors duration-300"
+                      className='relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
+                     transition-colors duration-300'
                       href={item.to}
                       style={{
-                        color: headerTextColor || "#101010",
+                        color: headerTextColor || '#101010',
                       }}
                     >
                       Category
                     </Link>
                     {isShopMegaMenuOpen && (
                       <div
-                        className="fixed left-0 top-[100%] px-container py-6 bg-white  shadow-2xl z-50 w-[100vw]"
+                        className='fixed left-0 top-[100%] px-container py-6 bg-white  shadow-2xl z-50 w-[100vw]'
                         style={
                           {
-                            backgroundColor: themeContext?.headerBackgroundColor || "#fff",
-                            "--button-bg": themeContext?.buttonBackgroundColor || "#111111",
+                            backgroundColor:
+                              themeContext?.headerBackgroundColor || '#fff',
+                            '--button-bg':
+                              themeContext?.buttonBackgroundColor || '#111111',
                           } as React.CSSProperties
                         }
                       >
-                        <div className="flex items-center w-full">
+                        <div className='flex items-center w-full'>
                           {loading ? (
                             <Loader />
                           ) : categories.length > 0 ? (
-                            <div className="w-full mx-auto">
+                            <div className='w-full mx-auto'>
                               <CategoryGrid
                                 categories={categories}
                                 headerTextColor={headerTextColor}
                               />
                             </div>
                           ) : (
-                            <div className="flex items-center justify-center p-4 w-full">
+                            <div className='flex items-center justify-center p-4 w-full'>
                               <p
-                                className="text-sm "
+                                className='text-sm '
                                 style={{
-                                  color: textColor || "#1e293b",
+                                  color: textColor || '#1e293b',
                                 }}
                               >
                                 No categories found
@@ -698,28 +745,32 @@ export default function Header({
                 ) : (
                   <Link
                     key={item.label}
-                    className="relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
-                   transition-colors duration-300 "
+                    className='relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
+                   transition-colors duration-300 '
                     href={item.to}
                     style={{
-                      color: headerTextColor || "#101010",
+                      color: headerTextColor || '#101010',
                     }}
                   >
-                    {item.label === "About" ? "About Us" : item.label === "Contact" ? "Contact Us" : item.label}
+                    {item.label === 'About'
+                      ? 'About Us'
+                      : item.label === 'Contact'
+                      ? 'Contact Us'
+                      : item.label}
                   </Link>
                 )
-              ))}
+              )}
             </div>
 
-            <div className="right-nav flex items-center gap-3 sm:gap-4 h-full">
+            <div className='right-nav flex items-center gap-3 sm:gap-4 h-full'>
               <Search />
               <div
                 className='cursor-pointer hover:opacity-70 transition-opacity'
                 onClick={() => router.push('/my-account/wishlist')}
               >
                 <Icon
-                  name="heart4"
-                  fill="none"
+                  name='heart4'
+                  fill='none'
                   size={28}
                 />
               </div>
@@ -747,14 +798,16 @@ export default function Header({
                   size={23}
                 />
               </div>
-              <div className="relative lg:hidden cursor-pointer mt-[5px]"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <div
+                className='relative lg:hidden cursor-pointer mt-[5px]'
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
                 <Icon
-                  name="mobileMenu"
-                  stroke={headerTextColor || "#111111"}
-                  strokeWidth="1.625"
-                  viewBox="0 0 26 26"
-                  fill="none"
+                  name='mobileMenu'
+                  stroke={headerTextColor || '#111111'}
+                  strokeWidth='1.625'
+                  viewBox='0 0 26 26'
+                  fill='none'
                 />
               </div>
             </div>
@@ -764,67 +817,70 @@ export default function Header({
     ),
     5: (
       <>
-        <div className="mx-auto w-full">
-          <div className="flex items-center justify-between">
+        <div className='mx-auto w-full'>
+          <div className='flex items-center justify-between'>
             <CommonLogo
               storeInfo={storeInfo}
               headerTextColor={headerTextColor}
             />
 
-            <div className="right-nav flex items-center gap-3 sm:gap-4 h-full">
-              <div className="hidden lg:flex items-center h-full gap-6 pe-5">
-                {navItems.map((item) => (
-                  item.label === "Categories" ? (
+            <div className='right-nav flex items-center gap-3 sm:gap-4 h-full'>
+              <div className='hidden lg:flex items-center h-full gap-6 pe-5'>
+                {navItems.map((item) =>
+                  item.label === 'Categories' ? (
                     <div
                       key={item.label}
-                      className="relative h-full"
+                      className='relative h-full'
                       onMouseEnter={() => setIsShopMegaMenuOpen(true)}
                       onMouseLeave={() => setIsShopMegaMenuOpen(false)}
                     >
                       <Link
-                        className="relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
-                       transition-colors duration-300"
+                        className='relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
+                       transition-colors duration-300'
                         href={item.to}
                         style={{
-                          color: headerTextColor || "#101010",
+                          color: headerTextColor || '#101010',
                         }}
                       >
                         Category
-                        <span style={{ marginLeft: 4, display: "inline-flex" }}>
+                        <span style={{ marginLeft: 4, display: 'inline-flex' }}>
                           <Icon
-                            name="arrow-down"
+                            name='arrow-down'
                             size={16}
-                            stroke={headerTextColor || "#101010"}
+                            stroke={headerTextColor || '#101010'}
                           />
                         </span>
                       </Link>
 
                       {isShopMegaMenuOpen && (
                         <div
-                          className="fixed left-0 top-[100%] px-container py-6 bg-white  shadow-2xl z-50 w-[100vw]"
+                          className='fixed left-0 top-[100%] px-container py-6 bg-white  shadow-2xl z-50 w-[100vw]'
                           style={
                             {
-                              backgroundColor: themeContext?.headerBackgroundColor || "#fff",
-                              "--button-bg": themeContext?.buttonBackgroundColor || "#111111",
+                              backgroundColor:
+                                themeContext?.headerBackgroundColor || '#fff',
+                              '--button-bg':
+                                themeContext?.buttonBackgroundColor ||
+                                '#111111',
                             } as React.CSSProperties
                           }
                         >
-                          <div className="flex items-center w-full">
+                          <div className='flex items-center w-full'>
                             {loading ? (
                               <Loader />
                             ) : categories.length > 0 ? (
-                              <div className="w-full mx-auto">
+                              <div className='w-full mx-auto'>
                                 <CategoryGrid
                                   categories={categories}
                                   headerTextColor={headerTextColor}
                                 />
                               </div>
                             ) : (
-                              <div className="flex items-center justify-center p-4 w-full">
+                              <div className='flex items-center justify-center p-4 w-full'>
                                 <p
-                                  className="text-sm "
+                                  className='text-sm '
                                   style={{
-                                    color: textColor || "#1e293b",
+                                    color: textColor || '#1e293b',
                                   }}
                                 >
                                   No categories found
@@ -838,17 +894,21 @@ export default function Header({
                   ) : (
                     <Link
                       key={item.label}
-                      className="relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
-                     transition-colors duration-300 "
+                      className='relative text-[0.875rem] lg:text-[1rem] font-medium py-10 h-full flex items-center outline-none
+                     transition-colors duration-300 '
                       href={item.to}
                       style={{
-                        color: headerTextColor || "#101010",
+                        color: headerTextColor || '#101010',
                       }}
                     >
-                      {item.label === "About" ? "About Us" : item.label === "Contact" ? "Contact Us" : item.label}
+                      {item.label === 'About'
+                        ? 'About Us'
+                        : item.label === 'Contact'
+                        ? 'Contact Us'
+                        : item.label}
                     </Link>
                   )
-                ))}
+                )}
               </div>
               <Search />
               <div
@@ -856,8 +916,8 @@ export default function Header({
                 onClick={() => router.push('/my-account/wishlist')}
               >
                 <Icon
-                  name="heart4"
-                  fill="none"
+                  name='heart4'
+                  fill='none'
                   size={28}
                 />
               </div>
@@ -885,14 +945,16 @@ export default function Header({
                   size={23}
                 />
               </div>
-              <div className="relative lg:hidden cursor-pointer mt-[5px]"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <div
+                className='relative lg:hidden cursor-pointer mt-[5px]'
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
                 <Icon
-                  name="mobileMenu"
-                  stroke={headerTextColor || "#111111"}
-                  strokeWidth="1.625"
-                  viewBox="0 0 26 26"
-                  fill="none"
+                  name='mobileMenu'
+                  stroke={headerTextColor || '#111111'}
+                  strokeWidth='1.625'
+                  viewBox='0 0 26 26'
+                  fill='none'
                 />
               </div>
             </div>

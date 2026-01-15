@@ -65,7 +65,7 @@ const NewArrivalSection = React.memo(function NewArrivalSection() {
           </h2>
         )} */}
         {/* {themeId === 2 && ( */}
-        <div className="feature-flex-wrapper similar-products-section mb-[1.25rem] lg:mb-7.5">
+        <div className="feature-flex-wrapper similar-products-section animation-section mb-[1.25rem] lg:mb-7.5">
           <div>
             <p
               className="uppercase"

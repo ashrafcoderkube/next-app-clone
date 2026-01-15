@@ -64,7 +64,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 
   return (
     <>
-      <div className='relative w-full'>
+      <div className='relative w-full newsSlider-wrapper'>
         <div className='overflow-hidden'>
           <div
             className='embla'
@@ -89,7 +89,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
                         height={80}
                         src={category.sub_category_image}
                         alt={category.sub_category_name}
-                        className='object-cover w-full h-full transition-transform duration-200 hover:scale-105'
+                        className='object-cover w-full h-full transition-transform duration-200'
                       />
                     </div>
                     <span
@@ -107,26 +107,26 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
           </div>
         </div>
         {/* Navigation arrows - visible only on md and larger */}
-      </div>
-      <div className='hidden md:block animation-section'>
-        <button
-          className='swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] !left-[10px]'
-          onClick={scrollPrev}
-          style={{
-            color: themeContext?.buttonTextColor || '#ffffff',
-          }}
-        >
-          <ChevronLeft />
-        </button>
-        <button
-          className='swiper-button-next-custom swiper-button-next z-20 !top-[45%] !right-[10px]'
-          onClick={scrollNext}
-          style={{
-            color: themeContext?.buttonTextColor || '#ffffff',
-          }}
-        >
-          <ChevronRight />
-        </button>
+        <div className='animation-section'>
+          <button
+            className='swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] !left-[10px]'
+            onClick={scrollPrev}
+            style={{
+              color: themeContext?.buttonTextColor || '#ffffff',
+            }}
+          >
+            <ChevronLeft />
+          </button>
+          <button
+            className='swiper-button-next-custom swiper-button-next z-20 !top-[45%] !right-[10px]'
+            onClick={scrollNext}
+            style={{
+              color: themeContext?.buttonTextColor || '#ffffff',
+            }}
+          >
+            <ChevronRight />
+          </button>
+        </div>
       </div>
     </>
   );

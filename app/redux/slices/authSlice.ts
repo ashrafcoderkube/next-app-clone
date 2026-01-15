@@ -312,6 +312,26 @@ export const updateCustomerDetails = createAsyncThunk(
   }
 );
 
+export const refreshToken = createAsyncThunk(
+  "token/refreshtoken",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("auth/token/refresh");
+      console.log("response", response.data);
+      if (response?.data?.success) {
+        // Return the data with token for state update
+        return response.data;
+      } else {
+        // Don't show error toast for refresh token failures as they might be silent
+        return rejectWithValue(response?.data?.message || "Token refresh failed");
+      }
+    } catch (error: any) {
+      // Don't show error toast for refresh token failures as they might be silent
+      return rejectWithValue(error.response?.data?.message || "Token refresh failed");
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -511,6 +531,17 @@ const authSlice = createSlice({
       .addCase(updateCustomerDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = (action.payload as string) || "Failed to update customer details";
+      })
+      .addCase(refreshToken.fulfilled, (state, action) => {
+        // Update the user token in state
+        if (action.payload.data?.token && state.user) {
+          state.user.token = action.payload.data.token;
+        }
+      })
+      .addCase(refreshToken.rejected, (state, action) => {
+        // Optional: handle refresh token failure (e.g., logout user if refresh fails)
+        // For now, we'll keep the user logged in but the token won't be refreshed
+        console.warn("Token refresh failed:", action.payload);
       })
   },
 });

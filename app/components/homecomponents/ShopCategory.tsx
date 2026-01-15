@@ -118,8 +118,6 @@ const ShopCategory = React.memo(function ShopCategory() {
   const themeColors = useAppSelector(selectThemeColors);
   const { categories } = useAppSelector(selectProductCategories);
 
-  console.log("categories", categories);
-
   // Memoize the view all categories handler
   const handleViewAllCategories = React.useCallback(() => {
     router.push("/categories");

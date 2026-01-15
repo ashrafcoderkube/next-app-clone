@@ -77,7 +77,7 @@ export default function CustomCategoryCard({
     },
 
     3: {
-      outerWrapper: 'newsSlider-wrapper mb-[2.75rem]',
+      outerWrapper: 'newsSlider-wrapper animation-section mb-[2.75rem]',
       wrapper:
         'my-box w-full relative bg-[#f2f2f2] rounded-[1.125rem] flex flex-col flex-shrink-0 overflow-hidden cursor-pointer',
       imageWrapper:
@@ -246,7 +246,7 @@ export default function CustomCategoryCard({
 
   return (
     <div className={v.outerWrapper || ''}>
-      <div className='relative px-3'>
+      <div className='relative'>
         <div
           className={v.wrapper}
           onClick={goToShop}

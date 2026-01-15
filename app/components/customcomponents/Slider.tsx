@@ -19,9 +19,6 @@ import { DotButton, useDotButton } from './EmblaDotButton';
 const Slider = ({ data }: { data: any }) => {
   const sliderFiles = data?.slider_files || [];
   const themeContext = useTheme() || {};
-  const themeId = useAppSelector(
-    (state: RootState) => state.storeInfo?.themeId
-  );
 
   // Embla Carousel setup
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -45,7 +42,7 @@ const Slider = ({ data }: { data: any }) => {
     useDotButton(emblaApi);
 
   return (
-    <section className='animation-section h-full'>
+    <section className='animation-section h-full '>
       <div className='relative w-full h-full overflow-hidden'>
         <div
           className='embla h-full'
@@ -87,13 +84,13 @@ const Slider = ({ data }: { data: any }) => {
 
         <div className='content-wrapper px-container absolute inset-0 z-10 flex flex-col justify-center items-center'>
           <p className='text-[1.625rem] lg:text-[52px] uppercase text-white mb-[8px] font-bold line-clamp-2'>
-            {data?.[0]?.title || ''}
+            {data?.title || ''}
           </p>
           <div
             className='uppercase text-white line-clamp-3 mb-5 line-clamp-2'
-            title={data?.[0]?.content?.replace(/<[^>]*>?/gm, '') || ''}
+            title={data?.content?.replace(/<[^>]*>?/gm, '') || ''}
           >
-            <HtmlContent htmlContent={data?.[0]?.content} />
+            <HtmlContent htmlContent={data?.content} />
           </div>
 
           <div className='pointer-events-auto'>
@@ -392,7 +389,7 @@ export const MainSlider = ({
       {galleryItems.length > 1 && (
         <div className='hidden md:block animation-section'>
           <button
-            className={`swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] !left-[10px] ${
+            className={`swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] ${
               isPrevDisabled
                 ? 'swiper-button-disabled opacity-50 cursor-not-allowed'
                 : 'hover:opacity-80'
@@ -404,7 +401,7 @@ export const MainSlider = ({
             <ChevronLeft className='w-6 h-6' />
           </button>
           <button
-            className={`swiper-button-next-custom swiper-button-next z-20 !top-[45%] !right-[10px] ${
+            className={`swiper-button-next-custom swiper-button-next z-20 !top-[45%] ${
               isNextDisabled
                 ? 'swiper-button-disabled opacity-50 cursor-not-allowed'
                 : 'hover:opacity-80'
@@ -590,12 +587,12 @@ export const LightboxSlider = ({
                 {/* Navigation Buttons - hidden on mobile, visible on md+ */}
                 <div className='hidden md:block animation-section'>
                   <button
-                    className={`swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] !left-[10px] `}
+                    className={`swiper-button-prev-custom swiper-button-prev z-20 !top-[45%]`}
                   >
                     <ChevronLeft className='w-6 h-6' />
                   </button>
                   <button
-                    className={`swiper-button-next-custom swiper-button-next z-20 !top-[45%] !right-[10px]`}
+                    className={`swiper-button-next-custom swiper-button-next z-20 !top-[45%]`}
                   >
                     <ChevronRight className='w-6 h-6' />
                   </button>

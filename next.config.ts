@@ -5,11 +5,12 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
 
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+    removeConsole: true,
   },
 
   images: {
-    unoptimized: true,
+    // ✅ Let Next.js handle optimization (if your hosting supports it)
+    unoptimized: true, // IMPORTANT: Change this!
     remotePatterns: [
       {
         protocol: "https",
@@ -17,6 +18,10 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000, // ✅ 1 year cache
   },
 
   compress: true,
@@ -29,20 +34,14 @@ const nextConfig: NextConfig = {
       "embla-carousel-react",
     ],
   },
+
   eslint: {
-    // Ignore ESLint errors during builds to allow OpenNext build to proceed
     ignoreDuringBuilds: true,
   },
+
   typescript: {
-    // Also ignore TypeScript errors during builds if needed
     ignoreBuildErrors: false,
   },
-  /* Your existing Next.js config options */
 };
 
 export default nextConfig;
-
-
-
-
-

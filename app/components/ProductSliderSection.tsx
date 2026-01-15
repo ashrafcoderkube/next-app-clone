@@ -19,10 +19,8 @@ function ProductSliderSection() {
   );
   const themeId = useSelector((state: any) => state.storeInfo?.themeId);
   const themeContext = useTheme() || {};
-  const {
-    buttonBackgroundColor = '#111111',
-    buttonTextColor = '#ffffff',
-  } = themeContext;
+  const { buttonBackgroundColor = '#111111', buttonTextColor = '#ffffff' } =
+    themeContext;
 
   useEffect(() => {
     if (slug) {
@@ -91,7 +89,7 @@ function ProductSliderSection() {
     >
       {similarProducts && similarProducts.length > 0 && (
         <section
-          className='px-container similar-products-section word-break'
+          className='px-container similar-products-section animation-section word-break'
           style={
             {
               '--button-color': buttonBackgroundColor,
@@ -153,9 +151,9 @@ function ProductSliderSection() {
             </div>
 
             {/* Navigation Buttons - hidden on mobile, visible on md+ */}
-            <div className='hidden md:block animation-section'>
+            <div className='animation-section'>
               <button
-                className={`swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] !left-[10px] ${
+                className={`swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] ${
                   isPrevDisabled ? 'swiper-button-disabled' : ''
                 }`}
                 onClick={scrollPrev}
@@ -168,7 +166,7 @@ function ProductSliderSection() {
                 <ChevronLeft className='w-6 h-6' />
               </button>
               <button
-                className={`swiper-button-next-custom swiper-button-next z-20 !top-[45%] !right-[10px] ${
+                className={`swiper-button-next-custom swiper-button-next z-20 !top-[45%] ${
                   isNextDisabled ? 'swiper-button-disabled' : ''
                 }`}
                 onClick={scrollNext}

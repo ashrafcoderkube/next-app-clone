@@ -22,7 +22,7 @@ const SingleImage = React.memo(({ data }: { data: any }) => {
   return (
     <section className='relative w-full overflow-hidden'>
       {/* FIXED HEIGHT → NO CLS */}
-      <div className='relative w-full aspect-[16/9] md:aspect-[21/9] bg-[#f2f2f2]'>
+      <div className='relative before:content-[""] before:block before:float-left before:pt-[100%] md:before:pt-[45%] after:content-[""] after:table after:clear-both h-full w-full bg-[#f2f2f2]'>
         <SafeImage
           src={imageUrl}
           alt={data?.title || 'Hero Banner'}
@@ -103,16 +103,19 @@ const Banner = React.memo(() => {
         payload: cachedData,
       });
     } else {
-      requestIdleCallbackSafe(() => {
-        dispatch(fetchHomeSection())
-          .unwrap()
-          .then((result) => {
-            if (result) {
-              setToSessionStorage(cacheKey, result);
-            }
-          })
-          .catch(console.error);
-      }, { timeout: 2000 });
+      requestIdleCallbackSafe(
+        () => {
+          dispatch(fetchHomeSection())
+            .unwrap()
+            .then((result) => {
+              if (result) {
+                setToSessionStorage(cacheKey, result);
+              }
+            })
+            .catch(console.error);
+        },
+        { timeout: 2000 }
+      );
     }
   }, [dispatch]);
 

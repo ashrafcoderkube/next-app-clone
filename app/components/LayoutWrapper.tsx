@@ -3,8 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import CommonHeader from "./CommonHeader";
-import { useAppSelector } from "../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { RootState } from "../redux/store";
+import { refreshToken } from "../redux/slices/authSlice";
 import dynamic from "next/dynamic";
 import { TopHeaderSkeleton, HeaderSkeleton, HeaderWholesalerSkeleton, FooterSkeleton, WholesalerFooterSkeleton } from "./HeaderSkeletons";
 
@@ -57,8 +58,12 @@ export default function LayoutWrapper({
   const [hasShadow, setHasShadow] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
   const isInitialMount = useRef(true);
+  const dispatch = useAppDispatch();
   const { loading, error, themeId, isWholesaler } = useAppSelector(
     (state: RootState) => state.storeInfo
+  );
+  const { isAuthenticated, user } = useAppSelector(
+    (state: RootState) => state.auth
   );
   const hideCommonHeader = pathname === "/";
 
@@ -137,6 +142,13 @@ export default function LayoutWrapper({
     mainRef.current.style.paddingTop = `${totalHeaderHeight}px`;
     isInitialMount.current = false;
   }, [headerHeight, topHeaderHeight, showTopHeader, isWholesaler]);
+
+  // Refresh token when site loads if user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user?.token) {
+      dispatch(refreshToken());
+    }
+  }, []); // Empty dependency array - runs only once on mount
 
   if (!loading && error) {
     return <BackupPage />;

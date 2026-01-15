@@ -1,25 +1,20 @@
 'use client';
 
-import React, {
-  useEffect,
-  useMemo,
-  useCallback,
-  useState,
-} from "react";
-import { useTheme } from "../../contexts/ThemeContext";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { RootState } from "../../redux/store";
-import CustomCategoryCard from "./CustomCategoryCard";
-import { fetchProductCategories } from "@/app/redux/slices/productSlice";
-import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { selectProductCategories } from "@/app/redux/selectors";
+import React, { useEffect, useMemo, useCallback, useState } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { RootState } from '../../redux/store';
+import CustomCategoryCard from './CustomCategoryCard';
+import { fetchProductCategories } from '@/app/redux/slices/productSlice';
+import useEmblaCarousel from 'embla-carousel-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { selectProductCategories } from '@/app/redux/selectors';
 
 export default function CategorySlider() {
   const themeContext = useTheme() || {};
   const dispatch = useAppDispatch();
   const { textColor } = themeContext;
-  const isSwiper = (themeContext?.categoryLayout || "swiper") === "swiper";
+  const isSwiper = (themeContext?.categoryLayout || 'swiper') === 'swiper';
   const { categories, loading } = useAppSelector(selectProductCategories);
 
   useEffect(() => {
@@ -28,11 +23,12 @@ export default function CategorySlider() {
     }
   }, [dispatch, categories.length]);
 
-  // Embla Carousel setup
+  // Embla Carousel setup - consistent with ProductSliderSection
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       align: 'start',
-      slidesToScroll: 1, // Always scroll one slide at a time for smooth movement
+      slidesToScroll: 1,
+      loop: false, // Set to false to allow proper prev/next disabling at ends
     }
     // [Autoplay({ delay: 2000, stopOnInteraction: true })]
   );
@@ -53,6 +49,7 @@ export default function CategorySlider() {
       updateScrollState();
       emblaApi.on('select', updateScrollState);
       emblaApi.on('reInit', updateScrollState);
+      emblaApi.on('slidesChanged', updateScrollState); // Extra safety
     }
   }, [emblaApi, updateScrollState]);
 
@@ -64,10 +61,20 @@ export default function CategorySlider() {
     if (emblaApi && canScrollNext) emblaApi.scrollNext();
   }, [emblaApi, canScrollNext]);
 
-  // Check if there are no slides or not enough slides to scroll
+  // Disable buttons if no categories or at boundaries
   const hasNoSlides = categories.length === 0;
   const isPrevDisabled = hasNoSlides || !canScrollPrev;
   const isNextDisabled = hasNoSlides || !canScrollNext;
+
+  // Re-init carousel when data changes (helps with image loading)
+  useEffect(() => {
+    if (emblaApi && categories?.length > 0) {
+      const timer = setTimeout(() => {
+        emblaApi.reInit();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [categories, emblaApi]);
 
   if (loading) {
     const skeletonItems = Array.from({ length: 8 }, (_, idx) => ({
@@ -79,7 +86,7 @@ export default function CategorySlider() {
     return (
       <div className='px-container'>
         {isSwiper ? (
-          <div className='newsSlider-wrapper'>
+          <div className='newsSlider-wrapper animation-section'>
             <div className='relative'>
               <div className='flex gap-6 overflow-hidden'>
                 {skeletonItems.slice(0, 4).map((item, idx) => (
@@ -122,7 +129,7 @@ export default function CategorySlider() {
       <div className='px-container'>
         {isSwiper ? (
           <div
-            className='newsSlider-wrapper'
+            className='newsSlider-wrapper animation-section'
             style={
               {
                 '--button-color':
@@ -145,27 +152,30 @@ export default function CategorySlider() {
                     className='embla overflow-hidden'
                     ref={emblaRef}
                   >
-                    <div className='embla__container flex justify-center align-center'>
+                    <div className='embla__container flex'>
                       {categories.map((item, idx) => (
                         <div
                           key={item.sub_category_id || idx}
                           className='embla__slide w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 min-w-0'
                         >
-                          <CustomCategoryCard
-                            isSwiper={isSwiper}
-                            item={item}
-                            index={idx}
-                          />
+                          <div className='w-full px-3 h-full'>
+                            <CustomCategoryCard
+                              isSwiper={isSwiper}
+                              item={item}
+                              index={idx}
+                            />
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Navigation arrows - always visible */}
-                  <div className='hidden md:block animation-section'>
+                  {/* Navigation Buttons - hidden on mobile, visible on md+ */}
+                  <div className='animation-section'>
                     <button
-                      className={`swiper-button-prev-custom swiper-button-prev swiper-button-prev1 ${isPrevDisabled ? "swiper-button-disabled" : ""
-                        }`}
+                      className={`swiper-button-prev-custom swiper-button-prev z-20 !top-[45%] ${
+                        isPrevDisabled ? 'swiper-button-disabled' : ''
+                      }`}
                       onClick={scrollPrev}
                       disabled={isPrevDisabled}
                       style={{
@@ -177,8 +187,9 @@ export default function CategorySlider() {
                       <ChevronLeft className='w-6 h-6' />
                     </button>
                     <button
-                      className={`swiper-button-next-custom swiper-button-next swiper-button-next1 ${isNextDisabled ? "swiper-button-disabled" : ""
-                        }`}
+                      className={`swiper-button-next-custom swiper-button-next z-20 !top-[45%] ${
+                        isNextDisabled ? 'swiper-button-disabled' : ''
+                      }`}
                       onClick={scrollNext}
                       disabled={isNextDisabled}
                       style={{

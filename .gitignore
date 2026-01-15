@@ -12,6 +12,7 @@
 
 
 package-lock.json
+.open-next
 # testing
 /coverage
 

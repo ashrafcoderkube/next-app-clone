@@ -241,6 +241,7 @@ const SafeImageComponent = ({
         ? "blur(10px)"
         : "blur(0px)",
     transform: getMergedTransform(),
+    willChange: !originalImageLoaded && isBlur ? "filter" : "auto",
     transition: "filter 0.3s ease-in-out",
   };
 
@@ -270,14 +271,20 @@ const SafeImageComponent = ({
       src={finalSrc}
       alt={alt || "Image"}
       className={className}
-      style={finalStyle}
+      style={{
+        ...finalStyle,
+        // Explicitly set dimensions to prevent shifting
+        maxWidth: fill ? "100%" : width ? `${width}px` : "auto",
+        maxHeight: fill ? "100%" : height ? `${height}px` : "auto",
+      }}
       onClick={onClick}
       onError={handleError}
       fill={fill}
       priority={priority}
       quality={quality}
-      sizes={sizes || ""}
-      loading={loading}
+      sizes={sizes || undefined}
+      // loading={loading}
+      {...(priority ? {} : { loading })}
       {...props}
     />
   );
